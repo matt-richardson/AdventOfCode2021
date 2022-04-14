@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Puzzles.Day03_Diagnostics;
+using Puzzles.Day03Diagnostics;
 
 namespace Tests;
 

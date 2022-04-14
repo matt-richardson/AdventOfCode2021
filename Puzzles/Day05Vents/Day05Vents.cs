@@ -1,15 +1,17 @@
 ﻿// See https://adventofcode.com/2021/day/3
 
-namespace Puzzles.Day05_Vents;
+namespace Puzzles.Day05Vents;
 
-public class Day05Vents
+public class Day05Vents : IPuzzle
 {
-    public Day05Vents()
+    public (object answer1, object answer2) Calculate()
     {
-        var diagnosticReport = File.ReadAllLines(@"C:\Data\dev\Spikes\AdventOfCode2021\AdventOfCode2021\Day05-Vents\inputdata.txt");
+        var diagnosticReport = Helpers.ReadInputData(nameof(Day05Vents));
 
-        Console.WriteLine("Part 1: " + CalculatePart1(diagnosticReport));
-        Console.WriteLine("Part 2: " + CalculatePart2(diagnosticReport));
+        return (
+            CalculatePart1(diagnosticReport),
+            CalculatePart2(diagnosticReport)
+        );
     }
 
     public static int CalculatePart1(string[] vents)

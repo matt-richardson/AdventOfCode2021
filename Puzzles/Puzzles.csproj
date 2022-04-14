@@ -5,10 +5,16 @@
         <RootNamespace>Puzzles</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="NUnit" Version="3.10.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="**\inputdata.txt" />
+      <EmbeddedResource Include="**\inputdata.txt" />
     </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Puzzles.Day06_Lanternfish;
+namespace Puzzles.Day06LanternFish;
 
 public class LanternFishSchool
 {
@@ -28,7 +28,7 @@ public class LanternFishSchool
         fishCounts[7] = fishCounts[8];
         fishCounts[8] = fishAboutToSpawn;
 
-        Console.WriteLine($"At the end of day {day++}, there are {Count} lantern fish (spawning took {stopwatch.Elapsed.TotalSeconds} seconds)" );
+        // Console.WriteLine($"At the end of day {day++}, there are {Count} lantern fish (spawning took {stopwatch.Elapsed.TotalSeconds} seconds)" );
     }
 
     public override string ToString()

@@ -1,15 +1,17 @@
 ﻿// See https://adventofcode.com/2021/day/3
 
-namespace Puzzles.Day03_Diagnostics;
+namespace Puzzles.Day03Diagnostics;
 
-public class Day03Diagnostics
+public class Day03Diagnostics : IPuzzle
 {
-    public Day03Diagnostics()
+    public (object answer1, object answer2) Calculate()
     {
-        var diagnosticReport = File.ReadAllLines(@"C:\Data\dev\Spikes\AdventOfCode2021\AdventOfCode2021\Day03-Diagnostics\inputdata.txt");
+        var diagnosticReport = Helpers.ReadInputData(nameof(Day03Diagnostics));
 
-        Console.WriteLine("Part 1: " + CalculatePart1(diagnosticReport));
-        Console.WriteLine("Part 2: " + CalculatePart2(diagnosticReport));
+        return (
+            CalculatePart1(diagnosticReport),
+            CalculatePart2(diagnosticReport)
+        );
     }
 
     public static int CalculatePart1(string[] diagnosticReport)

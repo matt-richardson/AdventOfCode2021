@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Puzzles.Day04_GiantSquidBingo;
+using Puzzles.Day04GiantSquidBingo;
 
 namespace Tests;
 

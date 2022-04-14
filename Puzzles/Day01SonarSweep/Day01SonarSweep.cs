@@ -1,15 +1,17 @@
 ﻿// See https://adventofcode.com/2021/day/
 
-namespace Puzzles.Day01_SonarSweep;
+namespace Puzzles.Day01SonarSweep;
 
-public class Day01SonarSweep
+public class Day01SonarSweep : IPuzzle
 {
-    public Day01SonarSweep()
+    public (object answer1, object answer2) Calculate()
     {
-        var sonarReadings = File.ReadAllLines(@"/Users/matt/dev/Spikes/AdventOfCode2021/AdventOfCode2021/Puzzles/Day01-SonarSweep/inputdata.txt");
+        var sonarReadings = Helpers.ReadInputData(nameof(Day01SonarSweep));
 
-        Console.WriteLine("Part 1: " + CalculatePart1(sonarReadings));
-        Console.WriteLine("Part 2: " + CalculatePart2(sonarReadings));
+        return (
+            CalculatePart1(sonarReadings),
+            CalculatePart2(sonarReadings)
+        );
     }
 
     public static int CalculatePart1(string[] readings)

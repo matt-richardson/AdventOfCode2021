@@ -1,15 +1,17 @@
 ﻿// See https://adventofcode.com/2021/day/3
 
-namespace Puzzles.Day06_Lanternfish;
+namespace Puzzles.Day06LanternFish;
 
-public class Day06LanternFish
+public class Day06LanternFish : IPuzzle
 {
-    public Day06LanternFish()
+    public (object answer1, object answer2) Calculate()
     {
-        var input = File.ReadAllLines(@"C:\Data\dev\Spikes\AdventOfCode2021\AdventOfCode2021\Day06-Lanternfish\inputdata.txt")[0];
+        var input = Helpers.ReadInputData(nameof(Day06LanternFish))[0];
 
-        Console.WriteLine("Part 1: " + CalculatePart1(input, 80));
-        Console.WriteLine("Part 2: " + CalculatePart2(input, 256));
+        return (
+            CalculatePart1(input, 80),
+            CalculatePart2(input, 256)
+        );
     }
 
     public static long CalculatePart1(string input, int days)
@@ -20,7 +22,7 @@ public class Day06LanternFish
         for(var i = 0; i < days; i++)
         {
             lanternFishSchool.DayPassed();
-            Console.WriteLine($"After {(i + 1)} days: {lanternFishSchool}");
+            //Console.WriteLine($"After {(i + 1)} days: {lanternFishSchool}");
         }
 
         return lanternFishSchool.Count;

@@ -1,16 +1,19 @@
 ﻿// See https://adventofcode.com/2021/day/2
 
-namespace Puzzles.Day02_Piloting;
+using Puzzles.Day01SonarSweep;
 
-public class Day02Piloting
+namespace Puzzles.Day02Piloting;
+
+public class Day02Piloting : IPuzzle
 {
-    public Day02Piloting()
+    public (object answer1, object answer2) Calculate()
     {
-        var plannedCourse =
-            File.ReadAllLines(@"C:\Data\dev\Spikes\AdventOfCode2021\AdventOfCode2021\Day02-Piloting\inputdata.txt");
+        var plannedCourse = Helpers.ReadInputData(nameof(Day02Piloting));
 
-        Console.WriteLine("Part 1: " + CalculatePart1(plannedCourse));
-        Console.WriteLine("Part 2: " + CalculatePart2(plannedCourse));
+        return (
+            CalculatePart1(plannedCourse),
+            CalculatePart2(plannedCourse)
+            );
     }
 
     public static int CalculatePart1(string[] plannedCourse)

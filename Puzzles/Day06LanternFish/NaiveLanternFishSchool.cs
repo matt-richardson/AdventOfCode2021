@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Puzzles.Day06_Lanternfish;
+namespace Puzzles.Day06LanternFish;
 
 public class NaiveLanternFishSchool
 {

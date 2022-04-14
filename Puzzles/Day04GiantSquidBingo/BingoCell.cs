@@ -1,4 +1,4 @@
-namespace Puzzles.Day04_GiantSquidBingo;
+namespace Puzzles.Day04GiantSquidBingo;
 
 class BingoCell
 {

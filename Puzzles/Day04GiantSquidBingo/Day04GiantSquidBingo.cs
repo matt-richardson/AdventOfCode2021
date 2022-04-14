@@ -1,15 +1,17 @@
 ﻿// See https://adventofcode.com/2021/day/3
 
-namespace Puzzles.Day04_GiantSquidBingo;
+namespace Puzzles.Day04GiantSquidBingo;
 
-public class Day04GiantSquidBingo
+public class Day04GiantSquidBingo : IPuzzle
 {
-    public Day04GiantSquidBingo()
+    public (object answer1, object answer2) Calculate()
     {
-        var diagnosticReport = File.ReadAllLines(@"C:\Data\dev\Spikes\AdventOfCode2021\AdventOfCode2021\Day04-GiantSquidBingo\inputdata.txt");
+        var diagnosticReport = Helpers.ReadInputData(nameof(Day04GiantSquidBingo));
 
-        Console.WriteLine("Part 1: " + CalculatePart1(diagnosticReport));
-        Console.WriteLine("Part 2: " + CalculatePart2(diagnosticReport));
+        return (
+            CalculatePart1(diagnosticReport),
+            CalculatePart2(diagnosticReport)
+        );
     }
 
     public static int CalculatePart1(string[] bingoData)

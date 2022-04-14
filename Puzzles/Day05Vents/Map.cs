@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace Puzzles.Day05_Vents;
+namespace Puzzles.Day05Vents;
 
 public class Map
 {

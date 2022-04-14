@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Puzzles.Day06_Lanternfish;
+using Puzzles.Day06LanternFish;
 
 namespace Tests;
 

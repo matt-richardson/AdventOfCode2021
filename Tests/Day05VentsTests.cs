@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Puzzles.Day05_Vents;
+using Puzzles.Day05Vents;
 
 namespace Tests;
 

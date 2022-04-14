@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using Puzzles.Day02_Piloting;
+using Puzzles.Day02Piloting;
 
 namespace Tests;
 

@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Puzzles.Day04_GiantSquidBingo;
+namespace Puzzles.Day04GiantSquidBingo;
 
 internal class BingoBoard
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestPlatform.TestHost;
 using NUnit.Framework;
-using Puzzles.Day01_SonarSweep;
+using Puzzles.Day01SonarSweep;
 
 namespace Tests;
 
