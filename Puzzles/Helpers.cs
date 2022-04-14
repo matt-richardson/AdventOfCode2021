@@ -10,12 +10,14 @@ public static class Helpers
 
         using var stream = assembly.GetManifestResourceStream($"Puzzles.{puzzle}.inputdata.txt");
         using var reader = new StreamReader(stream!);
-        var content = reader.ReadToEnd();
-        var lines = content.Contains("\r\n")
-            ? content.Split("\r\n")
-            : content.Split('\r');
-        return lines
-            .Take(lines.Length - 1)
-            .ToArray();
+
+        //use the same approach as File.ReadAllLines()
+        var lines = new List<string>();
+        string? line;
+        using (var sr = new StreamReader(stream!))
+            while ((line = sr.ReadLine()) != null)
+                lines.Add(line);
+
+        return lines.ToArray();
     }
 }
