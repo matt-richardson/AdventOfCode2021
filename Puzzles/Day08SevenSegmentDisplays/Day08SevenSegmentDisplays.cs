@@ -1,3 +1,4 @@
+
 using System.Diagnostics;
 
 namespace Puzzles.Day08SevenSegmentDisplays;
@@ -22,26 +23,16 @@ public class Day08SevenSegmentDisplays : IPuzzle
 
     public static long CalculatePart2(string[] input)
     {
-        var total = 0;
-        foreach (var row in input)
-        {
-            var (signals, displays) = row.Parse();
-            var resolvedSignals = ResolveSignalsToNumbers(signals);
-            total += MatchDisplayToResolvedSignal(resolvedSignals, displays);
-        }
-
-        return total;
-    }
-
-    public static int MatchDisplayToResolvedSignal(string[] signals, string[] resolvedSignals)
-    {
-        var resultAsString = resolvedSignals.Aggregate("", (prev, curr) =>
-        {
-            var sortedCurr = string.Join("", curr.ToCharArray().OrderBy(y => y));
-            var index = Array.FindIndex(signals, x => string.Join("", x.ToCharArray().OrderBy(y => y)) == sortedCurr);
-            return $"{prev}{index}";
-        });
-        return int.Parse(resultAsString);
+        return input
+            .Select(x => x.Parse())
+            .Select(x => new
+            {
+                x.signals,
+                x.displays,
+                mappings = ResolveSignalsToNumbers(x.signals)
+            })
+            .Select(x => GetDisplayReadout(x.mappings, x.displays))
+            .Sum();
     }
 
     public static string[] ResolveSignalsToNumbers(string[] signals)
@@ -54,6 +45,19 @@ public class Day08SevenSegmentDisplays : IPuzzle
         }
 
         return results;
+    }
+
+    public static int GetDisplayReadout(string[] signals, string[] resolvedSignals)
+    {
+        var resultAsString = resolvedSignals.Aggregate("", (prev, curr) => $"{prev}{FindSignal(signals, curr)}");
+        return int.Parse(resultAsString);
+    }
+
+    private static int FindSignal(string[] signals, string display)
+    {
+        var index = Array.FindIndex(signals, x => x == display);
+        Debug.Assert(index > -1, (string?) $"unexpectedly unable to find {display} in [{string.Join(",", signals)}]");
+        return index;
     }
 
     private static int DetermineNumber(string signal, string[] results)

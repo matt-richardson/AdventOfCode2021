@@ -32,10 +32,12 @@ public class Day08SevenSegmentDisplaysTests
         //"acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
         var results =
             "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf".Parse();
+
+        //note - the signals have been sorted alphabetically
         results.signals.Should<string>().BeEquivalentTo(new[]
-            {"acedgfb", "cdfbe", "gcdfa", "fbcad", "dab", "cefabd", "cdfgeb", "eafb", "cagedb", "ab"});
+            {"abcdefg", "bcdef", "acdfg", "abcdf", "abd", "abcdef", "bcdefg", "abef", "abcdeg", "ab"});
         results.displays.Should<string>().BeEquivalentTo(new[]
-            {"cdfeb", "fcadb", "cdfeb", "cdbaf"});
+            {"bcdef", "abcdf", "bcdef", "abcdf"});
     }
 
     [Test]
@@ -60,10 +62,11 @@ public class Day08SevenSegmentDisplaysTests
     [Test]
     public void CanMatchDisplayToResolvedSignals()
     {
-        var results = Day08SevenSegmentDisplays.MatchDisplayToResolvedSignal(
+        //note - the signals have been sorted alphabetically
+        var results = Day08SevenSegmentDisplays.GetDisplayReadout(
             //ordered
-            new [] { "cagedb", "ab", "gcdfa", "fbcad", "eafb", "cdfbe", "cdfgeb", "dab", "acedgfb", "cefabd"},
-            new [] {"cdfeb", "fcadb", "cdfeb", "cdbaf"}
+            new [] { "abcdeg", "ab", "acdfg", "abcdf", "abef", "bcdef", "bcdefg", "abd", "abcdefg", "abcdef"},
+            new [] {"bcdef", "abcdf", "bcdef", "abcdf"}
         );
         results.Should().Be(5353);
     }
