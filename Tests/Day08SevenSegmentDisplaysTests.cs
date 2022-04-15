@@ -1,3 +1,4 @@
+using FluentAssertions;
 using NUnit.Framework;
 using Puzzles.Day08SevenSegmentDisplays;
 
@@ -26,24 +27,44 @@ public class Day08SevenSegmentDisplaysTests
     }
 
     [Test]
-    public void Part2a()
+    public void CanParse()
     {
-        Assert.That(Day08SevenSegmentDisplays.CalculatePart2(new []{
-            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
-        }), Is.EqualTo(5353));
+        //"acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+        var results =
+            "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf".Parse();
+        results.signals.Should<string>().BeEquivalentTo(new[]
+            {"acedgfb", "cdfbe", "gcdfa", "fbcad", "dab", "cefabd", "cdfgeb", "eafb", "cagedb", "ab"});
+        results.displays.Should<string>().BeEquivalentTo(new[]
+            {"cdfeb", "fcadb", "cdfeb", "cdbaf"});
     }
 
     [Test]
-    public void Part2b()
+    public void CanResolveSignalsToNumbers()
     {
-        Assert.That(Day08SevenSegmentDisplays.CalculatePart2(new []{
-            "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe"
-        }), Is.EqualTo(8394));
+        //"acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+        var results = Day08SevenSegmentDisplays.ResolveSignalsToNumbers(
+            new [] { "acedgfb", "cdfbe", "gcdfa", "fbcad", "dab", "cefabd", "cdfgeb", "eafb", "cagedb", "ab" }
+        );
+        results[8].Should().Be("acedgfb");
+        results[5].Should().Be("cdfbe");
+        results[2].Should().Be("gcdfa");
+        results[3].Should().Be("fbcad");
+        results[7].Should().Be("dab");
+        results[9].Should().Be("cefabd");
+        results[6].Should().Be("cdfgeb");
+        results[4].Should().Be("eafb");
+        results[0].Should().Be("cagedb");
+        results[1].Should().Be("ab");
     }
 
     [Test]
-    public void Part2c()
+    public void CanMatchDisplayToResolvedSignals()
     {
-        Assert.That(Day08SevenSegmentDisplays.CalculatePart2(sampleData), Is.EqualTo(61229));
+        var results = Day08SevenSegmentDisplays.MatchDisplayToResolvedSignal(
+            //ordered
+            new [] { "cagedb", "ab", "gcdfa", "fbcad", "eafb", "cdfbe", "cdfgeb", "dab", "acedgfb", "cefabd"},
+            new [] {"cdfeb", "fcadb", "cdfeb", "cdbaf"}
+        );
+        results.Should().Be(5353);
     }
 }

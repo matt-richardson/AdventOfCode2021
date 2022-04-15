@@ -22,175 +22,107 @@ public class Day08SevenSegmentDisplays : IPuzzle
 
     public static long CalculatePart2(string[] input)
     {
-        var parsed = input.Parse();
-
-        foreach(var row in parsed)
+        var total = 0;
+        foreach (var row in input)
         {
-            var display = new SevenSegmentDisplay();
-            var easyNumbers = row.signals
-                .Where(display => display.Length is 2 or 3 or 4)
-                .OrderBy(display => display.Length);
-            foreach (var number in easyNumbers)
-                display.TryApply(number);
-
-            var hardNumbers = row.signals
-                .Where(display => display.Length != 2 && display.Length != 3 && display.Length != 4)
-                .OrderBy(display => display.Length);
-            // foreach (var number in hardNumbers)
-            //     display.TryApply(number);
-            display.ResolveRemainingNumbers(hardNumbers);
+            var (signals, displays) = row.Parse();
+            var resolvedSignals = ResolveSignalsToNumbers(signals);
+            total += MatchDisplayToResolvedSignal(resolvedSignals, displays);
         }
 
-        return 1;
-    }
-}
-
-[DebuggerDisplay("{Name}: {ToString()}")]
-class Segment
-{
-    private char[] potentialConnections;
-
-    public Segment(string name)
-    {
-        this.Name = name;
-        this.potentialConnections = new[] {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+        return total;
     }
 
-    public string Name { get; }
-
-    public void FilterTo(string number)
+    public static int MatchDisplayToResolvedSignal(string[] signals, string[] resolvedSignals)
     {
-        this.potentialConnections = this.potentialConnections.Where(x => number.ToCharArray().Contains(x)).ToArray();
-    }
-
-    public void FilterOut(string number)
-    {
-        this.potentialConnections = this.potentialConnections.Except(number.ToCharArray()).ToArray();
-    }
-
-    public override string ToString()
-    {
-        char GetCharOrBlank(char letter) => potentialConnections.Contains(letter) ? letter : '_';
-
-        return Enumerable.Range('a', 'g' - 'a' + 1)
-            .Aggregate("", (prev, curr) => $"{prev}{GetCharOrBlank((char) curr)}")
-            .ToString();
-    }
-}
-
-[DebuggerDisplay("{Name, nq}")]
-class Segments
-{
-    public string Name { get; }
-    private readonly Segment[] segments;
-
-    public Segments(string name, params Segment[] segments)
-    {
-        Name = name;
-        this.segments = segments;
-    }
-
-    public int Length => segments.Length;
-
-    public void FilterIn(string number)
-    {
-        foreach(var segment in segments)
-            segment.FilterTo(number);
-    }
-
-    public void FilterOut(string number)
-    {
-        foreach(var segment in segments)
-            segment.FilterOut(number);
-    }
-
-    // public override string ToString()
-    // {
-    //     return segments.
-    // }
-    public void FilterOut(Segments potentialNumber, string number)
-    {
-        var otherSegments = segments.Where(s => !potentialNumber.segments.Contains(s));
-        foreach (var s in otherSegments)
-            s.FilterOut(number);
-    }
-}
-
-public class SevenSegmentDisplay
-{
-    readonly Segment segmentTop = new("top");
-    readonly Segment segmentMiddle = new("middle");
-    readonly Segment segmentBottom = new("bottom");
-    readonly Segment segmentUpperLeft = new("upper left");
-    readonly Segment segmentUpperRight = new("upper right");
-    readonly Segment segmentLowerLeft = new("lower left");
-    readonly Segment segmentLowerRight = new("lower right");
-
-    Segments numberOne, numberTwo, numberThree, numberFour, numberFive, numberSix, numberSeven, numberEight, numberNine, numberZero, allSegments;
-    private readonly Segments[] allNumbers;
-
-    public SevenSegmentDisplay()
-    {
-        numberOne = new Segments("one", segmentUpperRight, segmentLowerRight);
-        numberTwo = new Segments("two", segmentTop, segmentUpperRight, segmentMiddle, segmentLowerLeft, segmentBottom);
-        numberThree = new Segments("three", segmentTop, segmentUpperRight, segmentMiddle, segmentLowerRight, segmentBottom);
-        numberFour = new Segments("four", segmentUpperLeft, segmentMiddle, segmentUpperRight, segmentLowerRight);
-        numberFive = new Segments("five", segmentTop, segmentUpperLeft, segmentMiddle, segmentLowerRight, segmentBottom);
-        numberSix = new Segments("fix", segmentTop, segmentUpperLeft, segmentMiddle, segmentLowerRight, segmentBottom, segmentLowerLeft);
-        numberSeven = new Segments("seven", segmentTop, segmentUpperRight, segmentLowerRight);
-        numberEight = new Segments("eight", segmentTop, segmentUpperRight, segmentMiddle, segmentLowerLeft, segmentBottom, segmentLowerRight, segmentUpperLeft);
-        numberNine = new Segments("nine", segmentTop, segmentUpperLeft, segmentMiddle, segmentUpperRight, segmentLowerRight, segmentBottom);
-        numberZero = new Segments("zero", segmentTop, segmentUpperRight, segmentLowerRight, segmentBottom, segmentLowerLeft, segmentUpperLeft);
-
-        allSegments = new Segments("all", segmentTop, segmentUpperRight, segmentMiddle, segmentLowerLeft, segmentBottom, segmentLowerRight, segmentUpperLeft);
-
-        allNumbers = new[] {numberOne, numberTwo, numberThree, numberFour, numberFive, numberSix, numberSeven, numberEight, numberNine, numberZero};
-    }
-
-    public void TryApply(string number)
-    {
-        foreach (var potentialNumber in allNumbers)
+        var resultAsString =  resolvedSignals.Aggregate("", (prev, curr) =>
         {
-            if (potentialNumber.Length == number.Length)
+            var sortedCurr = string.Join("", curr.ToCharArray().OrderBy(y => y));
+            var index = Array.FindIndex(signals, x => string.Join("", x.ToCharArray().OrderBy(y => y)) == sortedCurr);
+            return $"{prev}{index}";
+        });
+        return int.Parse(resultAsString);
+    }
+
+    public static string[] ResolveSignalsToNumbers(string[] signals)
+    {
+        var results = new string[10]; //0-9
+        foreach (var signal in SortSignals(signals))
+        {
+            var position = DetermineNumber(signal, results);
+            results[position] = signal;
+        }
+
+        return results;
+    }
+
+    private static int DetermineNumber(string signal, string[] results)
+    {
+        return signal.Length switch
+        {
+            2 => 1,
+            3 => 7,
+            4 => 4,
+            7 => 8,
+            6 when !Contains(signal, results[1]) => 6,
+            6 when Contains(signal, results[4]) => 9,
+            6 => 0,
+            5 when Contains(signal, results[1]) => 3,
+            5 when ContainsLowerLeftSignal(signal, results[9]) => 2,
+            5 => 5,
+            _ => throw new IndexOutOfRangeException("Unexpected signal length")
+        };
+    }
+
+    private static IEnumerable<string> SortSignals(string[] signals)
+    {
+        return signals.Select(x => new
             {
-                potentialNumber.FilterIn(number);
-                allSegments.FilterOut(potentialNumber, number);
-            }
-        }
+                signals = x,
+                length = x.Length,
+                priority = x.Length switch
+                {
+                    2 => 1,
+                    3 => 2,
+                    4 => 3,
+                    7 => 4,
+                    6 => 5,
+                    _ => 6
+                }
+            })
+            .OrderBy(x => x.priority)
+            .Select(x => x.signals);
     }
 
-    public void ResolveRemainingNumbers(IOrderedEnumerable<string> orderedEnumerable)
+    private static bool Contains(string signals, string result)
     {
-        var unresolvedNumbers = new List<string>(orderedEnumerable.Where(x => x.Length != 7));
+        var s = signals.ToCharArray();
+        return result.ToCharArray().All(x => s.Contains(x));
+    }
 
-
-
-
-
-        Console.WriteLine(this.segmentBottom.ToString());
-        // while (true)
-        // {
-        //     foreach(var number in allNumbers)
-        //
-        // }
+    private static bool ContainsLowerLeftSignal(string signals, string result9)
+    {
+        var lowerLeftSignal = new[] {'a', 'b', 'c', 'd', 'e', 'f', 'g'}
+            .Except(result9.ToCharArray())
+            .Single();
+        //if it has lowerleft, then it's a 2, otherwise it's a 5
+        return (signals.Contains(lowerLeftSignal));
     }
 }
+
 
 public static class Day08SevenSegmentDisplaysExtensionMethods
 {
     public static (string[] signals, string[] displays)[] Parse(this string[] input)
     {
-        return input
-            .Select(x =>
-            {
-                var split = x.Split(" | ");
-                return (signals: split[0], displays: split[1]);
-            }).Select(x =>
-            {
-                var signals = x.signals.Split(" ");
-                var displays = x.displays.Split(" ");
-                return (signals, displays);
-            })
-            .ToArray();
+        return input.Select(Parse).ToArray();
+    }
+
+    public static (string[] signals, string[] displays) Parse(this string input)
+    {
+        var split = input.Split(" | ");
+        var signals = split[0].Split(" ");
+        var displays = split[1].Split(" ");
+        return (signals, displays);
     }
 }
