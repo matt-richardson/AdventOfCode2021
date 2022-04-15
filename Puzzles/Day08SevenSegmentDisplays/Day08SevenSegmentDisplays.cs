@@ -35,7 +35,7 @@ public class Day08SevenSegmentDisplays : IPuzzle
 
     public static int MatchDisplayToResolvedSignal(string[] signals, string[] resolvedSignals)
     {
-        var resultAsString =  resolvedSignals.Aggregate("", (prev, curr) =>
+        var resultAsString = resolvedSignals.Aggregate("", (prev, curr) =>
         {
             var sortedCurr = string.Join("", curr.ToCharArray().OrderBy(y => y));
             var index = Array.FindIndex(signals, x => string.Join("", x.ToCharArray().OrderBy(y => y)) == sortedCurr);
@@ -76,19 +76,22 @@ public class Day08SevenSegmentDisplays : IPuzzle
 
     private static IEnumerable<string> SortSignals(string[] signals)
     {
+        //order is important - we need some answers to figure out others
+        int GetPriority(string x) => x.Length switch
+            {
+                2 => 1,
+                3 => 2,
+                4 => 3,
+                7 => 4,
+                6 => 5,
+                _ => 6
+            };
+
         return signals.Select(x => new
             {
                 signals = x,
                 length = x.Length,
-                priority = x.Length switch
-                {
-                    2 => 1,
-                    3 => 2,
-                    4 => 3,
-                    7 => 4,
-                    6 => 5,
-                    _ => 6
-                }
+                priority = GetPriority(x)
             })
             .OrderBy(x => x.priority)
             .Select(x => x.signals);
@@ -105,7 +108,6 @@ public class Day08SevenSegmentDisplays : IPuzzle
         var lowerLeftSignal = new[] {'a', 'b', 'c', 'd', 'e', 'f', 'g'}
             .Except(result9.ToCharArray())
             .Single();
-        //if it has lowerleft, then it's a 2, otherwise it's a 5
-        return (signals.Contains(lowerLeftSignal));
+        return signals.Contains(lowerLeftSignal);
     }
 }
