@@ -17,4 +17,5 @@
       <None Remove="**\inputdata.txt" />
       <EmbeddedResource Include="**\inputdata.txt" />
     </ItemGroup>
+
 </Project>
