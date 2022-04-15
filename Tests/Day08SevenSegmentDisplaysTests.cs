@@ -67,4 +67,10 @@ public class Day08SevenSegmentDisplaysTests
         );
         results.Should().Be(5353);
     }
+
+    [Test]
+    public void Part2()
+    {
+        Day08SevenSegmentDisplays.CalculatePart2(sampleData).Should().Be(61229);
+    }
 }
