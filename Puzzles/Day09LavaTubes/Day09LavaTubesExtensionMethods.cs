@@ -6,26 +6,27 @@ public static class Day09LavaTubesExtensionMethods
 {
     public static IEnumerable<Point> Parse(this string[] input)
     {
-        var data = input.Select(Parse).ToArray();
-
-        foreach (var (rowNumber, rowUp, rowCurrent, rowDown) in data.Loop())
-        {
-            foreach (var (colNumber, colLeft, colCurrent, colRight) in rowCurrent.Loop())
-            {
-                yield return new Point(
-                    rowNumber,
-                    colNumber,
-                    colCurrent,
-                    rowUp?[colNumber],
-                    rowDown?[colNumber],
-                    colLeft,
-                    colRight
-                );
-            }     
-        }
+        return input.Select(Parse)
+            .Sandwich()
+            .Select(x => new { row = x, col = x.current.Cast<int?>().Sandwich() })
+            .SelectMany(x => x.col, (y, col) => new { y.row, col })
+            .Select(x => new Point(
+                x.row.index,
+                x.col.index,
+                x.col.current!.Value,
+                x.row.previous?[x.col.index],
+                x.row.next?[x.col.index],
+                x.col.previous,
+                x.col.next
+            ));
     }
 
-    private static IEnumerable<(int, T?, T, T?)> Loop<T>(this T[] data) 
+    public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this IEnumerable<T> data)
+    {
+        return data.ToArray().Sandwich();
+    }
+    
+    public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this T[] data) 
     {
         var lowerBound = data.GetLowerBound(0);
         var upperBound = data.GetUpperBound(0);
