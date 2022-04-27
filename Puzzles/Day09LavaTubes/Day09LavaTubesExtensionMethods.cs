@@ -7,37 +7,25 @@ public static class Day09LavaTubesExtensionMethods
     public static IEnumerable<Point> Parse(this string[] input)
     {
         var data = input.Select(Parse).ToArray();
-     
-        var rowLowerBound = data.GetLowerBound(0);
-        var rowUpperBound = data.GetUpperBound(0);
-        var colLowerBound = data[rowLowerBound].GetLowerBound(0);
-        var colUpperBound = data[rowLowerBound].GetUpperBound(0);
-        for (var rowNumber = rowLowerBound; rowNumber < rowUpperBound; rowNumber++)
+
+        foreach (var (rowNumber, rowUp, rowCurrent, rowDown) in data.Loop())
         {
-            var rowUp = rowNumber == rowLowerBound ? null : data[rowNumber - 1];
-            var rowCurrent = data[rowNumber];
-            var rowDown = rowNumber == rowUpperBound - 1 ? null : data[rowNumber + 1];
-            for (var colNumber = colLowerBound; colNumber < colUpperBound; colNumber++)
+            foreach (var (colNumber, colLeft, colCurrent, colRight) in rowCurrent.Loop())
             {
-                yield return Point(rowNumber, colNumber, rowCurrent, rowUp, rowDown, colLowerBound, colUpperBound);
-            }
+                yield return new Point(
+                    rowNumber,
+                    colNumber,
+                    colCurrent,
+                    rowUp?[colNumber],
+                    rowDown?[colNumber],
+                    colLeft,
+                    colRight
+                );
+            }     
         }
     }
-    
-    private static Point Point(int rowNumber, int colNumber, int[] rowCurrent, int[] rowUp, int[] rowDown, int colLowerBound, int colUpperBound)
-    {
-        return new Point(
-            rowNumber,
-            colNumber,
-            rowCurrent[colNumber],
-            rowUp?[colNumber],
-            rowDown?[colNumber],
-            colNumber == colLowerBound ? null : rowCurrent[colNumber - 1],
-            colNumber == colUpperBound - 1 ? null : rowCurrent[colNumber + 1]
-        );
-    }
-    
-    static IEnumerable<(int, T?, T, T?)> Loop<T>(this T[] data) 
+
+    private static IEnumerable<(int, T?, T, T?)> Loop<T>(this T[] data) 
     {
         var lowerBound = data.GetLowerBound(0);
         var upperBound = data.GetUpperBound(0);
