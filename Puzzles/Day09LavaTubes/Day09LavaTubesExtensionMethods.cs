@@ -29,11 +29,11 @@ public static class Day09LavaTubesExtensionMethods
     {
         var lowerBound = data.GetLowerBound(0);
         var upperBound = data.GetUpperBound(0);
-        for (var index = lowerBound; index < upperBound; index++)
+        for (var index = lowerBound; index <= upperBound; index++)
         {
             var previous = index == lowerBound ? default : data[index - 1];
             var current = data[index];
-            var next = index == upperBound - 1 ? default : data[index + 1];
+            var next = index == upperBound ? default : data[index + 1];
             yield return (index, previous, current, next);
         }
     }
