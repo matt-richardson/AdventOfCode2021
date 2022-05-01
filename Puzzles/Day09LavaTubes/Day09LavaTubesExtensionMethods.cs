@@ -10,10 +10,11 @@ public static class Day09LavaTubesExtensionMethods
         return data.FirstOrDefault(point => point.RowNumber == row && point.ColNumber == col);
     }
     
-    public static void ForEach<T>(this IEnumerable<T> data, Action<IList<T>, T> func)
+    public static IEnumerable<T> ForEach<T>(this IEnumerable<T> data, Func<IList<T>, T, T> func)
     {
         var enumeratedList = data.ToList();
-        enumeratedList.ForEach(x => func(enumeratedList, x));
+        foreach (var item in enumeratedList)
+            yield return func(enumeratedList, item); 
     }
 
     public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this IEnumerable<T> data)

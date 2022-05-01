@@ -1,12 +1,15 @@
 using System.Diagnostics;
-using System.Xml.Xsl;
-using NUnit.Framework.Constraints;
 
 namespace Puzzles.Day09LavaTubes;
 
 [DebuggerDisplay("({RowNumber},{ColNumber}): Height {Height}, Risk {RiskLevel}")]
 public class Point
 {
+    private Point? up;
+    private Point? down;
+    private Point? left;
+    private Point? right;
+    
     public Point(int rowNumber, int colNumber, int height) 
     {
         RowNumber = rowNumber;
@@ -22,32 +25,27 @@ public class Point
 
     public int RiskLevel => Height + 1;
 
-    private bool IsLowerThanPointUp => Up == null || Up.Height > Height;
-    private bool IsLowerThanPointDown => Down == null || Down.Height > Height;
-    private bool IsLowerThanPointLeft => Left == null || Left.Height > Height;
-    private bool IsLowerThanPointRight => Right == null || Right.Height > Height;
+    private bool IsLowerThanPointUp => up == null || up.Height > Height;
+    private bool IsLowerThanPointDown => down == null || down.Height > Height;
+    private bool IsLowerThanPointLeft => left == null || left.Height > Height;
+    private bool IsLowerThanPointRight => right == null || right.Height > Height;
     public int RowNumber { get; }
     public int ColNumber { get; }
     public int Height { get; }
-    private Point? Up { get; set; }
-    private Point? Down { get; set; }
-    private Point? Left { get; set; }
-    private Point? Right { get; set; }
 
     public Point WithNeighbours(Point? up, Point? down, Point? left, Point? right)
     {
-        Up = up;
-        Down = down;
-        Left = left;
-        Right = right;
+        this.up = up;
+        this.down = down;
+        this.left = left;
+        this.right = right;
         return this;
     }
 
     public Basin GetBasin()
     {
         var seenPoints = new List<Point>();
-        var potentials = new Stack<Point>();
-        potentials.Push(this);
+        var potentials = new Stack<Point>(new [] { this });
         do
         {
             var current = potentials.Pop();
@@ -63,7 +61,7 @@ public class Point
         return new Basin(seenPoints);
     }
 
-    private List<Point?> Neighbours() => new() {Up, Down, Left, Right};
+    private List<Point?> Neighbours() => new() {up, down, left, right};
 
 #region Equality Comparers
     protected bool Equals(Point other)
