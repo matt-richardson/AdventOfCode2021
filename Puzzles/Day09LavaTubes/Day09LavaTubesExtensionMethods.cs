@@ -1,29 +1,35 @@
-using System.Diagnostics;
+using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Puzzles.Day09LavaTubes;
 
 public static class Day09LavaTubesExtensionMethods
 {
-    public static IEnumerable<Point> Parse(this string[] input)
+    public static Point? PointAtCoordinate(this IList<Point> data, int row, int col)
     {
-        return input.Select(Parse)
-            .Sandwich()
-            .Select(x => new { row = x, col = x.current.Cast<int?>().Sandwich() })
-            .SelectMany(x => x.col, (y, col) => new { y.row, col })
-            .Select(x => new Point(
-                x.row.index,
-                x.col.index,
-                x.col.current!.Value,
-                x.row.previous?[x.col.index],
-                x.row.next?[x.col.index],
-                x.col.previous,
-                x.col.next
-            ));
+        return data.FirstOrDefault(point => point.RowNumber == row && point.ColNumber == col);
+    }
+    
+    public static void ForEach<T>(this IEnumerable<T> data, Action<IList<T>, T> func)
+    {
+        var enumeratedList = data.ToList();
+        enumeratedList.ForEach(x => func(enumeratedList, x));
     }
 
     public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this IEnumerable<T> data)
     {
         return data.ToArray().Sandwich();
+    }
+    
+    [return: NotNull]
+    public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> data)
+    {
+        return data.Where(x => x != null)!;
+    }
+
+    public static int Product<TSource>(this IEnumerable<TSource> source, Func<TSource, int> selector)
+    {
+        return source.Select(selector).Aggregate((accumulator, current) => accumulator * current);
     }
     
     public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this T[] data) 
@@ -44,21 +50,3 @@ public static class Day09LavaTubesExtensionMethods
         return input.ToCharArray().Select(x => int.Parse(x.ToString())).ToArray();
     }
 }
-
-[DebuggerDisplay("({RowNumber},{ColNumber}): Height {Height}, Risk {RiskLevel}")]
-public record Point(int RowNumber, int ColNumber, int Height, int? Up, int? Down, int? Left, int? Right)
-{
-    public bool IsLowPoint =>
-        IsLowerThanPointUp &&
-        IsLowerThanPointDown &&
-        IsLowerThanPointLeft &&
-        IsLowerThanPointRight;
-
-    public int RiskLevel => Height + 1;
-
-    private bool IsLowerThanPointUp => Up == null || Up > Height;
-    private bool IsLowerThanPointDown => Down == null || Down > Height;
-    private bool IsLowerThanPointLeft => Left == null || Left > Height;
-    private bool IsLowerThanPointRight => Right == null || Right > Height;
-};
-

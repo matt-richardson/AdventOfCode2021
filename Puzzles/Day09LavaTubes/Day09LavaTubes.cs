@@ -1,6 +1,3 @@
-
-using System.Diagnostics;
-
 namespace Puzzles.Day09LavaTubes;
 
 public class Day09LavaTubes : IPuzzle
@@ -17,13 +14,18 @@ public class Day09LavaTubes : IPuzzle
 
     public static long CalculatePart1(string[] input)
     {
-        var parsed = input.Parse().ToArray();
-        var lowPoints = parsed.Where(x => x.IsLowPoint).ToArray();
+        var map = new Map(input);
+        var lowPoints = map.LowPoints();
         return lowPoints.Sum(x => x.RiskLevel);
     }
 
     public static long CalculatePart2(string[] input)
     {
-        return 0;
+        var map = new Map(input);
+        return map
+            .Basins()
+            .OrderByDescending(x => x.Size)
+            .Take(3)
+            .Product(x => x.Size);
     }
 }

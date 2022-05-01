@@ -26,7 +26,8 @@ public class Day09LavaTubesTests
         var input = "2199943210";
         var results = input.Parse();
         results.Length.Should().Be(input.Length);
-    }   
+    } 
+    
     [Test]
     public void CanParseMultipleRows()
     {
@@ -35,20 +36,31 @@ public class Day09LavaTubesTests
             "398",
             "985"
         };
-        var results = input.Parse();
-        results.Should().BeEquivalentTo(new[]
+        var results = new Map(input);
+        
+        var topLeft = new Point(0, 0, 2);
+        var topMiddle = new Point(0, 1, 1);
+        var topRight = new Point(0, 2, 9);
+
+        var middleLeft = new Point(1, 0, 3);
+        var middleMiddle = new Point(1, 1, 9);
+        var middleRight = new Point(1, 2, 8);
+
+        var bottomLeft = new Point(2, 0, 9);
+        var bottomMiddle = new Point(2, 1, 8);
+        var bottomRight = new Point(2, 2, 5);
+        
+        results.Points().Should().BeEquivalentTo(new[]
         {
-            new Point(0, 0, 2, null, 3, null, 1),
-            new Point(0, 1, 1, null, 9, 2, 9),
-            new Point(0, 2, 9, null, 8, 1, null),
-
-            new Point(1, 0, 3, 2, 9, null, 9),
-            new Point(1, 1, 9, 1, 8, 3, 8),
-            new Point(1, 2, 8, 9, 5, 9, null),
-
-            new Point(2, 0, 9, 3, null, null, 8),
-            new Point(2, 1, 8, 9, null, 9, 5),
-            new Point(2, 2, 5, 8, null, 8, null),
+            topLeft.WithNeighbours(null, middleLeft, null, topMiddle),
+            topMiddle.WithNeighbours(null, middleMiddle, topLeft, topRight),
+            topRight.WithNeighbours(null, middleRight, topMiddle, null),
+            middleLeft.WithNeighbours(topLeft, bottomLeft, null, middleMiddle),
+            middleMiddle.WithNeighbours(topMiddle, bottomMiddle, middleLeft, middleRight),
+            middleRight.WithNeighbours(topRight, bottomRight, middleMiddle, null),
+            bottomLeft.WithNeighbours(middleLeft, null, null, bottomMiddle),
+            bottomMiddle.WithNeighbours(middleMiddle, null, bottomLeft, bottomRight),
+            bottomRight.WithNeighbours(middleRight, null, bottomMiddle, null),
         });
     }
     
@@ -69,6 +81,6 @@ public class Day09LavaTubesTests
     [Test]
     public void Part2()
     {
-        throw new NotImplementedException();
+        Day09LavaTubes.CalculatePart2(sampleData).Should().Be(1134);
     }
 }
