@@ -14,17 +14,14 @@ public class Day10SyntaxScoring : IPuzzle
 
     public static long CalculatePart1(string[] input)
     {
-        return Parse(input)
-            .Sum(x => x is SyntaxError s ? s.Score : 0);
+        return new NavigationSubsystem(input)
+            .SyntaxErrors()
+            .Sum(x => x.Score);
     }
 
     public static long CalculatePart2(string[] input)
     {
         return 0;
     }
-
-    public static IEnumerable<ParseResult> Parse(IEnumerable<string> input)
-    {
-        return input.Select(LineParser.Parse);
-    }
 }
+

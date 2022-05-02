@@ -51,8 +51,8 @@ public class Day10SyntaxScoringTests
     [Test]
     public void ParsingSampleData()
     {
-        var result = Day10SyntaxScoring.Parse(sampleData);
-        result.Count(x => x is SyntaxError).Should().Be(5);
+        var result = new NavigationSubsystem(sampleData);
+        result.SyntaxErrors().Count().Should().Be(5);
     }
     
     [Test]

@@ -2,19 +2,27 @@ namespace Puzzles.Day10SyntaxScoring;
 
 public class LineParser
 {
+    private static Dictionary<char, char> matchedPairs = new Dictionary<char, char>()
+    {
+        {'(', ')'},
+        {'{', '}'},
+        {'<', '>'},
+        {'[', ']'},
+    };
+
     public static ParseResult Parse(string input)
     {
         var opens = new Stack<char>();
         foreach (var character in input)
         {
-            if (character is '(' or '{' or '<' or '[') //todo - put into matched lookup
-            {
+            if (IsValidOpeningBracket(character))
                 opens.Push(character);
-            }
+            else if (!IsValidClosingBracket(character))
+                throw new InvalidDataException("Unexpected input char " + character);
             else
             {
                 var last = opens.Pop();
-                var expected = GetMatchedPair(last);
+                var expected = matchedPairs[last];
                 if (character != expected)
                     return new SyntaxError(expected, character);
             }
@@ -23,15 +31,7 @@ public class LineParser
         return new SuccessfullyParsedLine();
     }
 
-    private static char GetMatchedPair(char inputChar)
-    {
-        return inputChar switch
-        {
-            '(' => ')',
-            '[' => ']',
-            '{' => '}',
-            '<' => '>',
-            _ => throw new InvalidDataException("Unexpected input char " + inputChar)
-        };
-    }
+    private static bool IsValidClosingBracket(char character) => matchedPairs.ContainsValue(character);
+
+    private static bool IsValidOpeningBracket(char character) => matchedPairs.ContainsKey(character);
 }
