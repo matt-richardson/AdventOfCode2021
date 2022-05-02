@@ -21,7 +21,10 @@ public class Day10SyntaxScoring : IPuzzle
 
     public static long CalculatePart2(string[] input)
     {
-        return 0;
+        var incompleteLines = new NavigationSubsystem(input)
+            .IncompleteLines();
+        var contest = new AutoCompleteContest(incompleteLines.Select(x => x.Score));
+        return contest.MiddleScore;
     }
 }
 

@@ -16,4 +16,11 @@ public class NavigationSubsystem
             .Where(x => x is SyntaxError)
             .Cast<SyntaxError>();
     }
+    
+    public IEnumerable<IncompleteLine> IncompleteLines()
+    {
+        return parseResults
+            .Where(x => x is IncompleteLine)
+            .Cast<IncompleteLine>();
+    }
 }

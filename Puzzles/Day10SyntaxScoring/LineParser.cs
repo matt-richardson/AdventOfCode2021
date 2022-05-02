@@ -28,7 +28,10 @@ public class LineParser
             }
         }
 
-        return new SuccessfullyParsedLine();
+        if (opens.Count == 0)
+            return new SuccessfullyParsedLine();
+        var autoComplete = string.Concat(opens.Select(x => matchedPairs[x]).ToArray());
+        return new IncompleteLine(autoComplete);
     }
 
     private static bool IsValidClosingBracket(char character) => matchedPairs.ContainsValue(character);
