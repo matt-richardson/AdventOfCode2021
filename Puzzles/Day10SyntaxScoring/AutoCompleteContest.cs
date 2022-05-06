@@ -6,6 +6,7 @@ public class AutoCompleteContest
 
     public AutoCompleteContest(IEnumerable<long> scores)
     {
+        //validation for odd number
         this.scores = scores.OrderBy(x => x).ToArray();
     }
 
