@@ -11,6 +11,8 @@ public class OctopusGrid
     record RowAndCol(Row Row, Cell Col);
 
     public long FlashCount { get; private set; }
+    public long StepCount { get; private set; }
+    public bool IsSynchronized => octopii.All(x => x.EnergyLevel == 0);
 
     public OctopusGrid(string[] input)
     {
@@ -27,11 +29,26 @@ public class OctopusGrid
         return octopus;
     }
 
+    public void Step(int stepCount)
+    {
+        for (var i = 0; i < stepCount; i++)
+            Step();
+    }
+
     public void Step()
     {
+        StepCount++;
         foreach (var octopus in octopii) octopus.Step();
         foreach (var octopus in octopii) octopus.FlashIfRequired();
         foreach (var octopus in octopii) octopus.ResetIfRequired();
+    }
+
+    public void StepUntilSynchronized()
+    {
+        do
+        {
+            Step();
+        } while (!IsSynchronized);
     }
     
     private static OctopusWithCoords[] ParseInitialOctopii(string[] input)

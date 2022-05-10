@@ -17,7 +17,7 @@ public class Day11DumboOctopus
             "11111"
         };
         var grid = new OctopusGrid(sampleData);
-        grid.Render().Should().BeEquivalentTo(sampleData);
+        grid.Render().Should().ContainInOrder(sampleData);
     }
     
     [Test]
@@ -32,23 +32,21 @@ public class Day11DumboOctopus
         });
         grid.Step();
 
-        grid.Render().Should().BeEquivalentTo(new[] {
+        grid.Render().Should().ContainInOrder(
             "34543",
             "40004",
             "50005",
             "40004",
-            "34543"
-        }, o => o.WithStrictOrderingFor(x => x));
+            "34543");
         
         grid.Step();
 
-        grid.Render().Should().BeEquivalentTo(new[] {
+        grid.Render().Should().ContainInOrder(
             "45654",
             "51115",
             "61116",
             "51115",
-            "45654"
-        }, o => o.WithStrictOrderingFor(x => x));
+            "45654");
     }
 
     [Test]
@@ -66,9 +64,8 @@ public class Day11DumboOctopus
             "4846848554",
             "5283751526"
         });
-        for (var i = 0; i < 10; i++)
-            grid.Step();
-        grid.Render().Should().BeEquivalentTo(new[] {
+        grid.Step(10);
+        grid.Render().Should().ContainInOrder(
             "0481112976",
             "0031112009",
             "0041112504",
@@ -78,8 +75,7 @@ public class Day11DumboOctopus
             "0442361130",
             "5532252350",
             "0532250600",
-            "0032240000"
-        }, o => o.WithStrictOrderingFor(x => x));
+            "0032240000");
         grid.FlashCount.Should().Be(204);
     }
     
@@ -98,8 +94,76 @@ public class Day11DumboOctopus
             "4846848554",
             "5283751526"
         });
-        for (var i = 0; i < 100; i++)
-            grid.Step();
+        grid.Step(100);
         grid.FlashCount.Should().Be(1656);
+    }
+
+    [Test]
+    public void WhenAllOctopiiHaveSameEnergyLevelThenIsSynchronizedIsTrue()
+    {
+        var grid = new OctopusGrid(new[] {
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000"
+        });
+        grid.IsSynchronized.Should().BeTrue();
+    }
+    
+    [Test]
+    public void SampleWillSynchronizeAfter195Steps()
+    {
+        var grid = new OctopusGrid(new[] {
+            "5483143223",
+            "2745854711",
+            "5264556173",
+            "6141336146",
+            "6357385478",
+            "4167524645",
+            "2176841721",
+            "6882881134",
+            "4846848554",
+            "5283751526"
+        });
+        grid.Step(195);
+        grid.Render().Should().ContainInOrder(
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000",
+            "0000000000"
+        );
+        grid.IsSynchronized.Should().BeTrue();
+    }
+    
+    [Test]
+    public void SampleStepsUntilSynchronized()
+    {
+        var grid = new OctopusGrid(new[] {
+            "5483143223",
+            "2745854711",
+            "5264556173",
+            "6141336146",
+            "6357385478",
+            "4167524645",
+            "2176841721",
+            "6882881134",
+            "4846848554",
+            "5283751526"
+        });
+        grid.StepUntilSynchronized();
+        grid.IsSynchronized.Should().BeTrue();
+        grid.StepCount.Should().Be(195);
     }
 }

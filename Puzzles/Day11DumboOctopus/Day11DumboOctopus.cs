@@ -15,14 +15,15 @@ public class Day11DumboOctopus : IPuzzle
     public static long CalculatePart1(string[] input)
     {
         var octopusGrid = new OctopusGrid(input);
-        for(var i = 0; i < 100; i++)
-            octopusGrid.Step();
+        octopusGrid.Step(100);
 
         return octopusGrid.FlashCount;
     }
 
     public static long CalculatePart2(string[] input)
     {
-        return -1;
+        var octopusGrid = new OctopusGrid(input);
+        octopusGrid.StepUntilSynchronized();
+        return octopusGrid.StepCount;
     }
 }
