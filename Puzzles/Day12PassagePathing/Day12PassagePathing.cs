@@ -15,12 +15,14 @@ public class Day12PassagePathing : IPuzzle
     public static long CalculatePart1(string[] input)
     {
         var pathFinder = new PathFinder(input);
-        var results = pathFinder.Paths;
+        var results = pathFinder.Part1Paths;
         return results.Count();
     }
 
     public static long CalculatePart2(string[] input)
     {
-        return 1;
+        var pathFinder = new PathFinder(input);
+        var results = pathFinder.Part2Paths;
+        return results.Count();
     }
 }
