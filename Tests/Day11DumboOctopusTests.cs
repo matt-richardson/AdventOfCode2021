@@ -4,7 +4,7 @@ using Puzzles.Day11DumboOctopus;
 
 namespace Tests;
 
-public class Day11DumboOctopus
+public class Day11DumboOctopusTests
 {
     [Test]
     public void CanRender()
