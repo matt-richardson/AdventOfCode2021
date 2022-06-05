@@ -123,7 +123,7 @@ public class Day12PassagePathingTests
         Console.WriteLine(new Day12PassagePathing().Calculate().answer1);
     }
     
-        [Test]
+    [Test]
     public void Part2FindsCorrectNumberOfPathsThroughSampleData()
     {
         var sampleData = new[]
