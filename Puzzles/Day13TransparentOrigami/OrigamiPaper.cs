@@ -38,37 +38,40 @@ public class OrigamiPaper
 
     public OrigamiPaper Fold(Fold fold)
     {
-        if (fold is FoldUp foldUp)
+        //this duplication sucks - figure out how to make it less sucky 
+        switch (fold)
         {
-            var topHalf = Enumerable.Range(1, foldUp.Y).Select(num => foldUp.Y - num);            
-            var bottomHalf = Enumerable.Range(1, foldUp.Y).Select(num => foldUp.Y + num);
-            var xAxis = Enumerable.Range(0, width);
-            var coords = xAxis
-                .SelectMany(x => topHalf.Zip(bottomHalf).Select(zip => new { x = x, y1 = zip.First, y2 = zip.Second }))
-                .Where(zip => HasDot(zip.x, zip.y1) || HasDot(zip.x, zip.y2))
-                .Select(result => new Coordinate(result.x, result.y1))
-                .Distinct()
-                .ToArray();
+            case FoldUp foldUp:
+            {
+                var topHalf = Enumerable.Range(1, foldUp.Y).Select(num => foldUp.Y - num);            
+                var bottomHalf = Enumerable.Range(1, foldUp.Y).Select(num => foldUp.Y + num);
+                var xAxis = Enumerable.Range(0, width);
+                var coords = xAxis
+                    .SelectMany(x => topHalf.Zip(bottomHalf).Select(zip => new { x = x, y1 = zip.First, y2 = zip.Second }))
+                    .Where(zip => HasDot(zip.x, zip.y1) || HasDot(zip.x, zip.y2))
+                    .Select(result => new Coordinate(result.x, result.y1))
+                    .Distinct()
+                    .ToArray();
 
-            return new OrigamiPaper(coords, width, foldUp.Y);
+                return new OrigamiPaper(coords, width, foldUp.Y);
+            }
+            case FoldLeft foldLeft:
+            {
+                var leftHalf = Enumerable.Range(1, foldLeft.X).Select(num => foldLeft.X - num);            
+                var rightHalf = Enumerable.Range(1, foldLeft.X).Select(num => foldLeft.X + num);
+                var yAxis = Enumerable.Range(0, height);
+                var coords = yAxis
+                    .SelectMany(y => leftHalf.Zip(rightHalf).Select(zip => new { x1 = zip.First, x2 = zip.Second, y = y}))
+                    .Where(zip => HasDot(zip.x1, zip.y) || HasDot(zip.x2, zip.y))
+                    .Select(result => new Coordinate(result.x1, result.y))
+                    .Distinct()
+                    .ToArray();
+
+                return new OrigamiPaper(coords, foldLeft.X, height);
+            }
+            default:
+                throw new ArgumentOutOfRangeException(nameof(fold), "We only support folding up and left");
         }
-        
-        if (fold is FoldLeft foldLeft)
-        {
-            var leftHalf = Enumerable.Range(1, foldLeft.X).Select(num => foldLeft.X - num);            
-            var rightHalf = Enumerable.Range(1, foldLeft.X).Select(num => foldLeft.X + num);
-            var yAxis = Enumerable.Range(0, height);
-            var coords = yAxis
-                .SelectMany(y => leftHalf.Zip(rightHalf).Select(zip => new { x1 = zip.First, x2 = zip.Second, y = y}))
-                .Where(zip => HasDot(zip.x1, zip.y) || HasDot(zip.x2, zip.y))
-                .Select(result => new Coordinate(result.x1, result.y))
-                .Distinct()
-                .ToArray();
-
-            return new OrigamiPaper(coords, foldLeft.X, height);
-        }
-
-        throw new NotImplementedException();
     }
     
     public long VisibleDotCount() => dotCoordinates.Count();
@@ -77,9 +80,11 @@ public class OrigamiPaper
 
     public OrigamiPaper Fold(IEnumerable<Fold> folds)
     {
+        // ReSharper disable PossibleMultipleEnumeration
         if (!folds.Any())
             return this;
         return Fold(folds.First()).Fold(folds.Skip(1));
+        // ReSharper restore PossibleMultipleEnumeration
     }
 }
 
