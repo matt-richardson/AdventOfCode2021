@@ -4,14 +4,16 @@ namespace Puzzles.Day04GiantSquidBingo;
 
 public class Day04GiantSquidBingo : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
         var diagnosticReport = Helpers.ReadInputData(nameof(Day04GiantSquidBingo));
+        return CalculatePart1(diagnosticReport);
+    }
 
-        return (
-            CalculatePart1(diagnosticReport),
-            CalculatePart2(diagnosticReport)
-        );
+    public object CalculatePart2()
+    {
+        var diagnosticReport = Helpers.ReadInputData(nameof(Day04GiantSquidBingo));
+        return CalculatePart2(diagnosticReport);
     }
 
     public static int CalculatePart1(string[] bingoData)

@@ -4,14 +4,16 @@ namespace Puzzles.Day06LanternFish;
 
 public class Day06LanternFish : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
-        var input = Helpers.ReadInputData(nameof(Day06LanternFish))[0];
+        var input = Helpers.ReadInputData(nameof(Day06LanternFish)).First();
+        return CalculatePart1(input, 80);
+    }
 
-        return (
-            CalculatePart1(input, 80),
-            CalculatePart2(input, 256)
-        );
+    public object CalculatePart2()
+    {
+        var input = Helpers.ReadInputData(nameof(Day06LanternFish)).First();
+        return CalculatePart2(input, 256);
     }
 
     public static long CalculatePart1(string input, int days)

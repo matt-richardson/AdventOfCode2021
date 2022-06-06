@@ -120,7 +120,7 @@ public class Day12PassagePathingTests
     [Test]
     public void CalculatesPart1()
     {
-        Console.WriteLine(new Day12PassagePathing().Calculate().answer1);
+        Console.WriteLine(new Day12PassagePathing().CalculatePart1());
     }
     
     [Test]
@@ -240,6 +240,6 @@ public class Day12PassagePathingTests
     [Test]
     public void CalculatesPart2()
     {
-        Console.WriteLine(new Day12PassagePathing().Calculate().answer2);
+        Console.WriteLine(new Day12PassagePathing().CalculatePart2());
     }
 }

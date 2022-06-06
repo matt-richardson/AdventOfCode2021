@@ -6,14 +6,16 @@ namespace Puzzles.Day02Piloting;
 
 public class Day02Piloting : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
         var plannedCourse = Helpers.ReadInputData(nameof(Day02Piloting));
+        return CalculatePart1(plannedCourse);
+    }
 
-        return (
-            CalculatePart1(plannedCourse),
-            CalculatePart2(plannedCourse)
-            );
+    public object CalculatePart2()
+    {
+        var plannedCourse = Helpers.ReadInputData(nameof(Day02Piloting));
+        return CalculatePart2(plannedCourse);
     }
 
     public static int CalculatePart1(string[] plannedCourse)

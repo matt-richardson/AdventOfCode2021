@@ -4,14 +4,16 @@ namespace Puzzles.Day05Vents;
 
 public class Day05Vents : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
         var diagnosticReport = Helpers.ReadInputData(nameof(Day05Vents));
+        return CalculatePart1(diagnosticReport);
+    }
 
-        return (
-            CalculatePart1(diagnosticReport),
-            CalculatePart2(diagnosticReport)
-        );
+    public object CalculatePart2()
+    {
+        var diagnosticReport = Helpers.ReadInputData(nameof(Day05Vents));
+        return CalculatePart2(diagnosticReport);
     }
 
     public static int CalculatePart1(string[] vents)

@@ -17,9 +17,9 @@ public static class Program
         {
             Console.WriteLine($"Day {puzzle.Name[3..5]}: {puzzle.Name[5..]}");
             var instance = (IPuzzle)executingAssembly.CreateInstance(puzzle.FullName);
-            var (part1, part2) = instance.Calculate();
-            Console.WriteLine(" - Part 1: " + part1);
-            Console.WriteLine(" - Part 2: " + part2);
+            ;
+            Console.WriteLine(" - Part 1: " + instance.CalculatePart1());
+            Console.WriteLine(" - Part 2: " + instance.CalculatePart2());
         }
     }
 }

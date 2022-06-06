@@ -2,14 +2,16 @@ namespace Puzzles.Day10SyntaxScoring;
 
 public class Day10SyntaxScoring : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
         var input = Helpers.ReadInputData(nameof(Day10SyntaxScoring));
+        return CalculatePart1(input);
+    }
 
-        return (
-            CalculatePart1(input),
-            CalculatePart2(input)
-        );
+    public object CalculatePart2()
+    {
+        var input = Helpers.ReadInputData(nameof(Day10SyntaxScoring));
+        return CalculatePart2(input);
     }
 
     public static long CalculatePart1(string[] input)

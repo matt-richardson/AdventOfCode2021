@@ -10,13 +10,13 @@ public class Day13TransparentOrigamiTests
     [Test]
     public void CalculatesPart1()
     {
-        Console.WriteLine(new Day13TransparentOrigami().Calculate().answer1);
+        Console.WriteLine(new Day13TransparentOrigami().CalculatePart1());
     }
 
     [Test]
     public void CalculatesPart2()
     {
-        Console.WriteLine(new Day13TransparentOrigami().Calculate().answer2);
+        Console.WriteLine(new Day13TransparentOrigami().CalculatePart2());
     }
 
     class Parsing

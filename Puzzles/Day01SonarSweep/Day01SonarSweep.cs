@@ -4,14 +4,16 @@ namespace Puzzles.Day01SonarSweep;
 
 public class Day01SonarSweep : IPuzzle
 {
-    public (object answer1, object answer2) Calculate()
+    public object CalculatePart1()
     {
         var sonarReadings = Helpers.ReadInputData(nameof(Day01SonarSweep));
+        return CalculatePart1(sonarReadings);
+    }
 
-        return (
-            CalculatePart1(sonarReadings),
-            CalculatePart2(sonarReadings)
-        );
+    public object CalculatePart2()
+    {
+        var sonarReadings = Helpers.ReadInputData(nameof(Day01SonarSweep));
+        return CalculatePart2(sonarReadings);
     }
 
     public static int CalculatePart1(string[] readings)
