@@ -6,23 +6,20 @@ public class PolymerTemplate
 {
     public PolymerTemplate(string template)
     {
-        this.Template = template;
-        this.Length = template.Length;
-        this.DistinctChars = template.Distinct();
-        this.CountOfMostCommonElement = DistinctChars.Max(GetElementCount);
-        this.CountOfLeastCommonElement = DistinctChars.Min(GetElementCount);
+        Template = template;
+        Length = template.Length;
+        DistinctChars = template.Distinct().ToArray();
+        CountOfMostCommonElement = DistinctChars.Max(GetElementCount);
+        CountOfLeastCommonElement = DistinctChars.Min(GetElementCount);
     }
 
-    public int Length { get; }
+    private int Length { get; }
 
     private IEnumerable<char> DistinctChars { get;  }
 
-    string Template { get;  }
+    private string Template { get;  }
 
-    public PolymerTemplate Apply(PairInsertionRule rule)
-    {
-        return Apply(new[] {rule});
-    }
+    public PolymerTemplate Apply(PairInsertionRule rule) => Apply(new[] {rule});
 
     public string Render() => Template;
 
