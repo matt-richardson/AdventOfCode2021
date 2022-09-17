@@ -12,6 +12,7 @@
         <PackageReference Include="FluentAssertions" Version="6.6.0" />
         <PackageReference Include="NUnit" Version="3.10.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
+        <PackageReference Include="RT.Dijkstra" Version="1.0.14" />
     </ItemGroup>
 
     <ItemGroup>

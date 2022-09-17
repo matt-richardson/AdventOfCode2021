@@ -1,4 +1,6 @@
 
+using RT.Dijkstra;
+
 namespace Puzzles.Day15Chiton;
 
 public class RiskMap
@@ -26,56 +28,14 @@ public class RiskMap
 
     public int CalculateLowestRiskPath()
     {
-        var shortestPathTracker = new PathTracker(Start);
+        var route = DijkstrasAlgorithm.Run (
+            Start,
+            0,
+            (a, b) => a + b,
+            out var lowestRiskPath);
 
-        foreach(var path in FindPaths(shortestPathTracker))
-        {
-            shortestPathTracker.Track(path);
-        }
-        
-        return shortestPathTracker.RiskOfShortestPath;
-    }
-
-    public IEnumerable<Path> FindPaths(PathTracker shortestPathTracker)
-    {
-        var visitTracker = new VisitTracker();
-        foreach (var cell in FindPaths(Start, shortestPathTracker, visitTracker))
-        {
-            Console.WriteLine("FindPaths(PathTracker): " + cell);
-            yield return new Path(cell, Start);
-        }
-        //return Enumerable.Empty<Path>();
-    }
-
-    public IEnumerable<Path> FindPaths(Cell cell, PathTracker shortestPathTracker, VisitTracker visitTracker)
-    {
-        visitTracker.Visit(cell);
-        foreach (var connectedCell in cell.ConnectedCells.OrderBy(x => x.Risk).Where(x => visitTracker.CanVisit(x)))
-        {
-            if (connectedCell.IsEnd)
-            {
-                yield return new Path(connectedCell);
-            }
-            else
-            {
-                var paths = FindPaths(connectedCell, shortestPathTracker, visitTracker.Clone()).OrderBy(x => x.Risk);
-                foreach (var path in paths)
-                {
-                    var newPath = new Path(path, connectedCell);
-                    if (newPath.RevistsItself)
-                        Console.WriteLine("Path " + path + " revisits itself - not a viable soln");
-                    else if (newPath.Risk > shortestPathTracker.RiskOfShortestPath)
-                    {
-                        Console.WriteLine("Path " + path + " has a higher risk than the lowest risk " + shortestPathTracker.RiskOfShortestPath);
-                        break;
-                    }
-                    else if (newPath.IsComplete)
-                        Console.WriteLine("Path " + path + " is complete with total risk " + path.Risk);
-                    else
-                       yield return newPath;
-                }   
-            }
-        }
+        Console.WriteLine($"{string.Join(", ", route)} ({lowestRiskPath} risk)");
+        return lowestRiskPath;
     }
 }
 
