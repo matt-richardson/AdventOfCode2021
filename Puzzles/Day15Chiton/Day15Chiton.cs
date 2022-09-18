@@ -15,15 +15,18 @@ public class Day15Chiton : IPuzzle
         return CalculatePart2(input);
     }
 
-    public static long CalculatePart1(string[] input)
+    private static long CalculatePart1(string[] input)
     {
         var riskMap = new RiskMap(input);
         var lowestRiskPath = riskMap.CalculateLowestRiskPath();
         return lowestRiskPath;
     }
 
-    public static string CalculatePart2(string[] input)
+    private static long CalculatePart2(string[] input)
     {
-        throw new NotImplementedException();
+        var riskMap = new RiskMap(input);
+        var expandedMap = riskMap.Expand(5, 5);
+        var lowestRiskPath = expandedMap.CalculateLowestRiskPath();
+        return lowestRiskPath;
     }
 }
