@@ -7,34 +7,33 @@ public class RiskMap
 {
     private readonly int width;
     private readonly int height;
-    private readonly List<Cell> mapCells;
+    private readonly Cell[,] mapCells;
 
     public RiskMap(string[] inputData)
         : this(Parse(inputData))
     {
     }
     
-    private RiskMap(IList<Cell> cells)
+    private RiskMap(Cell[,] cells)
     {
-        mapCells = new List<Cell>();
-        mapCells.AddRange(cells);
-        foreach (var cell in mapCells)
-            cell.Connect(mapCells);
-        Start = mapCells.Single(cell => cell.IsStart);
-        width = mapCells.Max(cell => cell.X) + 1;
-        height = mapCells.Max(cell => cell.Y) + 1;
+        mapCells = cells;
+        foreach (var cell in cells)
+            cell.Connect(cells);
+        Start = mapCells[0,0];
+        width = cells.GetUpperBound(0) + 1;
+        height = cells.GetUpperBound(1) + 1;
     }
 
-    private static IList<Cell> Parse(string[] inputData)
+    private static Cell[,] Parse(string[] inputData)
     {
-        var cells = new List<Cell>();
+        var cells = new Cell[inputData[0].Length, inputData.Length];
         for(var y = 0; y < inputData.Length; y++)
         {
             var row = inputData[y];
             for(var x = 0; x < row.Length; x++)
             {
                 var cell = new Cell(x, y, int.Parse(row[x].ToString()));
-                cells.Add(cell);
+                cells[x,y] = cell;
             }
         }
 
@@ -45,10 +44,10 @@ public class RiskMap
 
     public int CalculateLowestRiskPath()
     {
-        var route = DijkstrasAlgorithm.Run (
+        DijkstrasAlgorithm.Run (
             Start,
             0,
-            (a, b) => a + b,
+            (a, b) => a + b, 
             out var lowestRiskPath);
 
         //Console.WriteLine($"{string.Join(", ", route)} ({lowestRiskPath} risk)");
@@ -63,9 +62,15 @@ public class RiskMap
     public RiskMap Expand(int xMultiplier, int yMultiplier)
     {
         //this code is blurgh. Change to use enumerable.range
-        var newCells = new List<Cell>();
-        newCells.AddRange(mapCells);
-        
+        var newCells = new Cell[width * xMultiplier, height * yMultiplier];
+        for (var y = 0; y < height; y++)
+        {
+            for (var x = 0; x < width; x++)
+            {
+                newCells[x,y] = mapCells[x, y];
+            }
+        }
+
         for (var xMultiple = 1; xMultiple < xMultiplier; xMultiple++)
         {
             for (var y = 0; y < height; y++)
@@ -74,9 +79,9 @@ public class RiskMap
                 {
                     var newCellX = xMultiple * width + x;
                     var prevCellX = newCellX - width;
-                    var prevCell = newCells.Single(cell => cell.X == prevCellX && cell.Y == y);
+                    var prevCell = newCells[prevCellX, y];
                     var newCell = new Cell(newCellX, y, prevCell.Risk + 1);
-                    newCells.Add(newCell);
+                    newCells[newCellX, y] = newCell;
                 }
             }
         }
@@ -88,23 +93,23 @@ public class RiskMap
                 {
                     var newCellY = yMultiple * height + y;
                     var prevCellY = newCellY - height;
-                    var prevCell = newCells.Single(cell => cell.X == x && cell.Y == prevCellY);
+                    var prevCell = newCells[x, prevCellY];
                     var newCell = new Cell(x, newCellY, prevCell.Risk + 1);
-                    newCells.Add(newCell);
+                    newCells[x, newCellY] = newCell;
                 }
             }
         }
-
+        
         return new RiskMap(newCells);
     }
 
     public string[] Render()
     {
-        var xAxis =  Enumerable.Range(0, width + 1);
-        var yAxis =  Enumerable.Range(0, height + 1);
+        var xAxis =  Enumerable.Range(0, width);
+        var yAxis =  Enumerable.Range(0, height);
         return xAxis
             .SelectMany(_ => yAxis, (x, y) => new {X = x, Y = y})
-            .SelectMany(coord => mapCells.Where(cell => cell.X == coord.X && cell.Y == coord.Y))
+            .Select(coord => mapCells[coord.X, coord.Y])
             .GroupBy(cell => cell.Y)
             .Select(grouping => grouping.Aggregate("", (accum, cell) => $"{accum}{cell.Risk}"))
             .ToArray();

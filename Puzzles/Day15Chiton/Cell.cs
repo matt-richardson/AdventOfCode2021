@@ -40,12 +40,12 @@ public class Cell : Node<int, string>
 
     public override int GetHashCode() => HashCode.Combine(X, Y, Risk);
     
-    public void Connect(IList<Cell> cells)
+    public void Connect(Cell[,] cells)
     {
-        left = cells.FirstOrDefault(cell => cell.X == X - 1 && cell.Y == Y);
-        up = cells.FirstOrDefault(cell => cell.X == X && cell.Y == Y - 1);
-        right = cells.FirstOrDefault(cell => cell.X == X + 1 && cell.Y == Y);
-        down = cells.FirstOrDefault(cell => cell.X == X && cell.Y == Y + 1);
+        left = X > 0 ? cells[X - 1, Y] : null;
+        up = Y > 0 ? cells[X, Y - 1] : null;
+        right = X < cells.GetUpperBound(0) ? cells[X + 1, Y] : null;
+        down = Y < cells.GetUpperBound(1) ? cells[X, Y + 1] : null;
         edges = new List<Cell?> { left, up, right, down }
             .Where(cell => cell != null)
             .Cast<Cell>()
@@ -53,8 +53,6 @@ public class Cell : Node<int, string>
             .Select(toCell => new Edge<int, string>(toCell.Risk, $"{this} to {toCell}", toCell))
             .ToArray();
     }
-
-    public bool IsStart => left == null && up == null;
 
     public override string ToString() => $"{X},{Y}";
 
