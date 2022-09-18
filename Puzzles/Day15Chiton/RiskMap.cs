@@ -61,52 +61,40 @@ public class RiskMap
     /// </remarks>
     public RiskMap Expand(int xMultiplier, int yMultiplier)
     {
-        //this code is blurgh. Change to use enumerable.range
         var newCells = new Cell[width * xMultiplier, height * yMultiplier];
-        for (var y = 0; y < height; y++)
-        {
-            for (var x = 0; x < width; x++)
-            {
-                newCells[x,y] = mapCells[x, y];
-            }
-        }
+        
+        Enumerable.Range(0, width)
+            .SelectMany(_ => Enumerable.Range(0, height), (x, y) => new { x, y })
+            .ToList()
+            .ForEach(cell => newCells[cell.x,cell.y] = mapCells[cell.x, cell.y]);
 
         for (var xMultiple = 1; xMultiple < xMultiplier; xMultiple++)
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width; x++)
         {
-            for (var y = 0; y < height; y++)
-            {
-                for (var x = 0; x < width; x++)
-                {
-                    var newCellX = xMultiple * width + x;
-                    var prevCellX = newCellX - width;
-                    var prevCell = newCells[prevCellX, y];
-                    var newCell = new Cell(newCellX, y, prevCell.Risk + 1);
-                    newCells[newCellX, y] = newCell;
-                }
-            }
+            var newCellX = xMultiple * width + x;
+            var prevCellX = newCellX - width;
+            var prevCell = newCells[prevCellX, y];
+            newCells[newCellX, y] = new Cell(newCellX, y, prevCell.Risk + 1);
         }
+
         for (var yMultiple = 1; yMultiple < yMultiplier; yMultiple++)
+        for (var y = 0; y < height; y++)
+        for (var x = 0; x < width * xMultiplier; x++)
         {
-            for (var y = 0; y < height; y++)
-            {
-                for (var x = 0; x < width * xMultiplier; x++)
-                {
-                    var newCellY = yMultiple * height + y;
-                    var prevCellY = newCellY - height;
-                    var prevCell = newCells[x, prevCellY];
-                    var newCell = new Cell(x, newCellY, prevCell.Risk + 1);
-                    newCells[x, newCellY] = newCell;
-                }
-            }
+            var newCellY = yMultiple * height + y;
+            var prevCellY = newCellY - height;
+            var prevCell = newCells[x, prevCellY];
+            newCells[x, newCellY] = new Cell(x, newCellY, prevCell.Risk + 1);
         }
-        
+
         return new RiskMap(newCells);
     }
 
     public string[] Render()
     {
-        var xAxis =  Enumerable.Range(0, width);
-        var yAxis =  Enumerable.Range(0, height);
+        var xAxis = Enumerable.Range(0, width);
+        var yAxis = Enumerable.Range(0, height);
         return xAxis
             .SelectMany(_ => yAxis, (x, y) => new {X = x, Y = y})
             .Select(coord => mapCells[coord.X, coord.Y])
