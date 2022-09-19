@@ -1,4 +1,4 @@
-namespace Puzzles.Day16PacketDecoder;
+namespace Puzzles.Day16PacketDecoder.PacketTypes;
 
 public class LiteralPacket : Packet
 {
@@ -27,5 +27,5 @@ public class LiteralPacket : Packet
     public override long SumOfVersionNumbers() => Version;
     public override string UnusedBitRepresentation { get; }
 
-    public long Value { get; }
+    public override long Value { get; }
 }

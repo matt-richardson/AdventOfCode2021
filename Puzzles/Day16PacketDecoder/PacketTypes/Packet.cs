@@ -1,4 +1,4 @@
-namespace Puzzles.Day16PacketDecoder;
+namespace Puzzles.Day16PacketDecoder.PacketTypes;
 
 public abstract class Packet
 {
@@ -7,4 +7,5 @@ public abstract class Packet
     public abstract string BitRepresentation { get; }
     public abstract long SumOfVersionNumbers();
     public abstract string UnusedBitRepresentation { get; }
+    public abstract long Value { get; }
 }

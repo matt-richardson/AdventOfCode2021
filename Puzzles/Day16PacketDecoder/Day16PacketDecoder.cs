@@ -23,6 +23,7 @@ public class Day16PacketDecoder : IPuzzle
 
     private static long CalculatePart2(string input)
     {
-        throw new NotImplementedException();
+        var result = PacketDecoder.DecodeHex(input);
+        return result.Value;
     }
 }

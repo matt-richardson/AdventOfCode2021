@@ -2,6 +2,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using Puzzles.Day16PacketDecoder;
+using Puzzles.Day16PacketDecoder.PacketTypes;
 
 namespace Tests;
 
@@ -30,7 +31,7 @@ public class Day16PacketDecoderTests
         result.TypeId.Should().Be(6);
         result.BitRepresentation.Should().Be("00111000000000000110111101000101001010010001001000000000");
         result.Version.Should().Be(1);
-        result.Should().BeOfType<OperatorPacket>();
+        result.Should().BeAssignableTo<OperatorPacket>();
         var operatorPacket = (OperatorPacket)result;
         operatorPacket.LengthTypeId.Should().Be(0);
         operatorPacket.SubPackets.Count.Should().Be(2);
@@ -47,7 +48,7 @@ public class Day16PacketDecoderTests
         result.TypeId.Should().Be(3);
         result.BitRepresentation.Should().Be("11101110000000001101010000001100100000100011000001100000");
         result.Version.Should().Be(7);
-        result.Should().BeOfType<OperatorPacket>();
+        result.Should().BeAssignableTo<OperatorPacket>();
         var operatorPacket = (OperatorPacket)result;
         operatorPacket.LengthTypeId.Should().Be(1);
         operatorPacket.SubPackets.Count.Should().Be(3);
@@ -65,5 +66,20 @@ public class Day16PacketDecoderTests
     {
         var result = PacketDecoder.DecodeHex(input);
         result.SumOfVersionNumbers().Should().Be(sumOfVersionNumbers);
+    }
+    
+    [Test]
+    [TestCase("C200B40A82", 3)]
+    [TestCase("04005AC33890", 54)]
+    [TestCase("880086C3E88112", 7)]
+    [TestCase("CE00C43D881120", 9)]
+    [TestCase("D8005AC2A8F0", 1)]
+    [TestCase("F600BC2D8F", 0)]
+    [TestCase("9C005AC2F8F0", 0)]
+    [TestCase("9C0141080250320F1802104A08", 1)]
+    public void CanCalculatePacket(string input, int sumOfVersionNumbers)
+    {
+        var result = PacketDecoder.DecodeHex(input);
+        result.Value.Should().Be(sumOfVersionNumbers);
     }
 }

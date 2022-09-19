@@ -1,8 +1,8 @@
-namespace Puzzles.Day16PacketDecoder;
+namespace Puzzles.Day16PacketDecoder.PacketTypes;
 
-public class OperatorPacket : Packet
+public abstract class OperatorPacket : Packet
 {
-    public OperatorPacket(int packetTypeId, int version, string bits)
+    protected OperatorPacket(int packetTypeId, int version, string bits)
     {
         TypeId = packetTypeId;
         Version = version;
@@ -51,4 +51,5 @@ public class OperatorPacket : Packet
     public override string UnusedBitRepresentation { get; }
     public int LengthTypeId { get; }
     public List<Packet> SubPackets { get; } = new();
+    
 }
