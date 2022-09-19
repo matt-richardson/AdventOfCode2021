@@ -18,7 +18,7 @@ public class Octopus
     public int RowNumber { get; }
     public int ColNumber { get; }
 
-    public event EventHandler OnFlash;
+    public event EventHandler? OnFlash;
 
     public void WithNeighbours(Octopus? upLeft,
         Octopus? upMiddle,

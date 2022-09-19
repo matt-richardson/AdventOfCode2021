@@ -21,10 +21,9 @@ public class Day13TransparentOrigamiTests
 
     class Parsing
     {
-        private OrigamiInstructions instructions;
+        private readonly OrigamiInstructions instructions;
 
-        [SetUp]
-        public void Setup()
+        public Parsing()
         {
             var sampleData = new[]
             {

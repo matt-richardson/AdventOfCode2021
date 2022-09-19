@@ -23,7 +23,9 @@ public class LiteralPacket : Packet
     }
     
     public override int TypeId => 4;
+    public override string BitRepresentation { get; }
     public override long SumOfVersionNumbers() => Version;
+    public override string UnusedBitRepresentation { get; }
 
     public long Value { get; }
 }

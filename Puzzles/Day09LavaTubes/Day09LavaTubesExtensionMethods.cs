@@ -16,11 +16,11 @@ public static class Day09LavaTubesExtensionMethods
 
     public static IEnumerable<(int index, T? previous, T current, T? next)> Sandwich<T>(this IEnumerable<T> source)
     {
-        var data = source.ToArray();
+        var data = source.Cast<T?>().ToArray();
         var previous = new T?[] { default }.Concat(data);
         var next = data.Skip(1).Concat(new T?[] { default });
         return previous.Zip(data, next)
-            .Select((x, index) => (index, x.First, x.Second, x.Third));
+            .Select((x, index) => (index, x.First, x.Second!, x.Third));
     }
     
     public static IEnumerable<T> NotNull<T>(this IEnumerable<T?> data)

@@ -13,7 +13,7 @@ public class OperatorPacket : Packet
         {
             0 => GetSubPacketsBySubPacketLength(bits),
             1 => GetSubPacketsBySubPacketCount(bits),
-            _ => UnusedBitRepresentation
+            _ => string.Empty
         };
     }
 
@@ -46,7 +46,9 @@ public class OperatorPacket : Packet
     }
 
     public override int TypeId { get; }
+    public override string BitRepresentation { get; }
     public override long SumOfVersionNumbers() => SubPackets.Aggregate((long)Version, (accum, packet) => accum + packet.SumOfVersionNumbers());
+    public override string UnusedBitRepresentation { get; }
     public int LengthTypeId { get; }
     public List<Packet> SubPackets { get; } = new();
 }
