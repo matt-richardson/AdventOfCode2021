@@ -1,24 +1,12 @@
-using System.Text.RegularExpressions;
-
 namespace Puzzles.Day17TrickShot;
 
 public class VelocityCalculator
 {
-    private readonly int minX;
-    private readonly int maxX;
-    private readonly int minY;
-    private readonly int maxY;
+    private readonly TargetArea targetArea;
 
     public VelocityCalculator(string input)
     {
-        //example:
-        //target area: x=20..30, y=-10..-5
-        var regex = new Regex("target area: x=([-\\d]+)\\.\\.([-\\d]+), y=([-\\d]+)\\.\\.([-\\d]+)");
-        var match = regex.Match(input);
-        minX = Convert.ToInt32(match.Groups[1].Value);
-        maxX = Convert.ToInt32(match.Groups[2].Value);
-        minY = Convert.ToInt32(match.Groups[3].Value);
-        maxY = Convert.ToInt32(match.Groups[4].Value);
+        targetArea = TargetArea.Parse(input);
     }
 
     public IEnumerable<Probe> Calculate()
@@ -28,10 +16,10 @@ public class VelocityCalculator
         {
             var velocity = new Velocity(x, y);
             var probe = new Probe(velocity);
-            while (!probe.HasOvershot(minX, maxX, minY, maxY))
+            while (!targetArea.HasOvershot(probe))
             {
                 probe.Step();
-                if (probe.IsInTargetArea(minX, maxX, minY, maxY))
+                if (targetArea.IsInTargetArea(probe))
                 {
                     yield return probe;
                     break;
