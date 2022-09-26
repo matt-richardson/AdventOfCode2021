@@ -17,7 +17,7 @@ public class RegularNumber : Number
 
     public override int GetHashCode() => Number;
 
-    public int Number { get; }
+    private int Number { get; set; }
 
     public RegularNumber(int number)
     {
@@ -30,4 +30,9 @@ public class RegularNumber : Number
     }
 
     public override string ToString() => Number.ToString();
+
+    public void Add(RegularNumber regularNumber)
+    {
+        Number = Number + regularNumber.Number;
+    }
 }
