@@ -1,6 +1,6 @@
 namespace Puzzles.Day18SnailFish;
 
-public class Number
+public abstract class Number
 {
     public static Number Parse(string input)
     {
@@ -43,7 +43,14 @@ public class Number
     }
     
     public static implicit operator Number((Number, Number) tuple) => new Pair(tuple.Item1, tuple.Item2);
-    public static Number operator +(Number left, Number right) => new Pair(left, right);
+    public static Number operator +(Number left, Number right)
+    {
+        var pair = new Pair(left.DeepClone(), right.DeepClone());
+        var clone = pair;
+        clone.Reduce();
+        return clone;
+    }
+
     public static implicit operator Number(char number) => new RegularNumber(number);
     public static implicit operator Number(int number) => new RegularNumber(number);
 
@@ -52,26 +59,36 @@ public class Number
         this.Parent = parent;
     }
 
-    public Number? Parent { get; private set; }
+    protected Number? Parent { get; private set; }
 
     public void Reduce()
     {
-        Console.WriteLine(this.ToString());
         var thingHappened = false;
         do
         {
+            Console.WriteLine();
+            Console.WriteLine(this);
             if (this is Pair pair)
             {
-                thingHappened = pair.Explode();
-                if (thingHappened)
-                    Console.WriteLine("after explode: " + this);
-                else if (!thingHappened)
-                {
-                    thingHappened = pair.Split();
-                    if (thingHappened)
-                        Console.WriteLine("after split: " + this);
-                }
+                thingHappened = pair.Explode() || pair.Split();
             }
         } while (thingHappened);
     }
+
+    public static Number Add(IEnumerable<Number> numbers)
+    {
+        var numbersArray = numbers as Number[] ?? numbers.ToArray();
+        var first = numbersArray.First();
+        return numbersArray.Skip(1).Aggregate(first, (accum, second) =>
+        {
+            Console.WriteLine("  " + accum);
+            Console.WriteLine("+ " + second);
+            var number = accum + second;
+            Console.WriteLine("= " + number);
+            Console.WriteLine();
+            return number;
+        });
+    }
+
+    public abstract Number DeepClone();
 }
