@@ -13,6 +13,9 @@ public class Day18SnailFish : IPuzzle
 
     public object CalculatePart2()
     {
-        return -1;
+        var input = Helpers.ReadInputData(nameof(Day18SnailFish))
+            .Select(Number.Parse);
+        var result = Number.LargestSum(input);
+        return result.Magnitude();
     }
 }

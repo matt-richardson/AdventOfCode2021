@@ -66,8 +66,8 @@ public abstract class Number
         var thingHappened = false;
         do
         {
-            Console.WriteLine();
-            Console.WriteLine(this);
+            //Console.WriteLine();
+            //Console.WriteLine(this);
             if (this is Pair pair)
             {
                 thingHappened = pair.Explode() || pair.Split();
@@ -92,4 +92,16 @@ public abstract class Number
 
     public abstract Number DeepClone();
     public abstract int Magnitude();
+
+    public static Number LargestSum(IEnumerable<Number> numbers)
+    {
+        var numbersArray = numbers as Number[] ?? numbers.ToArray();
+        var firstNumbers = Enumerable.Range(0, numbersArray.Length);
+        var secondNumber = Enumerable.Range(0, numbersArray.Length);
+        return firstNumbers
+            .SelectMany(x => secondNumber, (a, b) => new { A = a, B = b })
+            .Where(x => x.A != x.B)
+            .Select(x => numbersArray[x.A] + numbersArray[x.B])
+            .MaxBy(x => x.Magnitude())!;
+    }
 }
