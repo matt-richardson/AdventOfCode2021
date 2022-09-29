@@ -46,22 +46,22 @@ public class Pair : Number
 
         if (depth != 4) 
             return false;
-        Console.WriteLine($"Exploding pair {this}");
+        //Console.WriteLine($"Exploding pair {this}");
         var leftNumber = ((Pair?)Parent)?.FindLeftNumber(this);
         var rightNumber = ((Pair?)Parent)?.FindRightNumber(this);
 
-        if (leftNumber != null) 
-            Console.WriteLine($"Adding {Left} to left number {leftNumber}");
-        else
-            Console.WriteLine($"No left value to add {Left} to");
-        if (rightNumber != null) 
-            Console.WriteLine($"Adding {Right} to right number {rightNumber} ");
-        else
-            Console.WriteLine($"No right value to add {Right} to");
+        // if (leftNumber != null) 
+        //     Console.WriteLine($"Adding {Left} to left number {leftNumber}");
+        // else
+        //     Console.WriteLine($"No left value to add {Left} to");
+        // if (rightNumber != null) 
+        //     Console.WriteLine($"Adding {Right} to right number {rightNumber} ");
+        // else
+        //     Console.WriteLine($"No right value to add {Right} to");
         leftNumber?.Add((RegularNumber) Left);
         rightNumber?.Add((RegularNumber) Right);
 
-        Console.WriteLine($"Replacing pair {this} with 0");
+        //Console.WriteLine($"Replacing pair {this} with 0");
         ((Pair?)Parent)!.ReplaceWith(this, new RegularNumber(0));
         return true;
     }

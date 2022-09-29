@@ -81,11 +81,11 @@ public abstract class Number
         var first = numbersArray.First();
         return numbersArray.Skip(1).Aggregate(first, (accum, second) =>
         {
-            Console.WriteLine("  " + accum);
-            Console.WriteLine("+ " + second);
+            //Console.WriteLine("  " + accum);
+            //Console.WriteLine("+ " + second);
             var number = accum + second;
-            Console.WriteLine("= " + number);
-            Console.WriteLine();
+            //Console.WriteLine("= " + number);
+            //Console.WriteLine();
             return number;
         });
     }

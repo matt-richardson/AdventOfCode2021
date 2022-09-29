@@ -54,11 +54,11 @@ public class RegularNumber : Number
             return false;
         }
 
-        Console.WriteLine($"Splitting regular number {number}");
+        //Console.WriteLine($"Splitting regular number {number}");
         var left = (int)Math.Round((double)number.Number / 2, MidpointRounding.ToZero);
         var right = (int)Math.Round((double)number.Number / 2, MidpointRounding.AwayFromZero);
         replacement = new Pair(left, right);
-        Console.WriteLine($"Replacing regular number {number} with pair {replacement}");
+        //Console.WriteLine($"Replacing regular number {number} with pair {replacement}");
         return true;
     }
 
