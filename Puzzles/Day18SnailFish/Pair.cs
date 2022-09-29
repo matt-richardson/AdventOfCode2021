@@ -60,8 +60,26 @@ public class Pair : Number
         ((Pair?)Parent)!.ReplaceWith(this, new RegularNumber(0));
         return true;
     }
+    
+    public bool Split()
+    {
+        if (Left is RegularNumber leftNumber)
+            if (leftNumber.Split())
+                return true;
+        if (Right is RegularNumber rightNumber)
+            if (rightNumber.Split())
+                return true;
+        
+        if (Left is Pair left)
+            if (left.Split())
+                return true;
+        if (Right is Pair right)
+            if (right.Split())
+                return true;
+        return false;
+    }
 
-    private void ReplaceWith(Pair caller, RegularNumber replacement)
+    internal void ReplaceWith(Number caller, Number replacement)
     {
         replacement.SetParent(this);
         if (Left.Equals(caller)) Left = replacement;

@@ -53,4 +53,25 @@ public class Number
     }
 
     public Number? Parent { get; private set; }
+
+    public void Reduce()
+    {
+        Console.WriteLine(this.ToString());
+        var thingHappened = false;
+        do
+        {
+            if (this is Pair pair)
+            {
+                thingHappened = pair.Explode();
+                if (thingHappened)
+                    Console.WriteLine("after explode: " + this);
+                else if (!thingHappened)
+                {
+                    thingHappened = pair.Split();
+                    if (thingHappened)
+                        Console.WriteLine("after split: " + this);
+                }
+            }
+        } while (thingHappened);
+    }
 }

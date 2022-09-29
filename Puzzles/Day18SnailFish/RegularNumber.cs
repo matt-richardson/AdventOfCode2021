@@ -35,4 +35,27 @@ public class RegularNumber : Number
     {
         Number = Number + regularNumber.Number;
     }
+
+    public bool Split()
+    {
+        if (!TrySplit(this, out var replacement)) 
+            return false;
+        if (Parent is Pair parent)
+            parent.ReplaceWith(this, replacement!);
+        return true;
+    }
+
+    public static bool TrySplit(RegularNumber number, out Pair? replacement)
+    {
+        if (number.Number < 10)
+        {
+            replacement = null;
+            return false;
+        }
+
+        var left = (int)Math.Round((double)number.Number / 2, MidpointRounding.ToZero);
+        var right = (int)Math.Round((double)number.Number / 2, MidpointRounding.AwayFromZero);
+        replacement = new Pair(left, right);
+        return true;
+    }
 }
