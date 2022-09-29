@@ -91,4 +91,5 @@ public abstract class Number
     }
 
     public abstract Number DeepClone();
+    public abstract int Magnitude();
 }

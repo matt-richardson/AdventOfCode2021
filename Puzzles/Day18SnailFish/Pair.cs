@@ -121,4 +121,5 @@ public class Pair : Number
     }
 
     public override Number DeepClone() => new Pair(Left.DeepClone(), Right.DeepClone());
+    public override int Magnitude() => Left.Magnitude() * 3 + Right.Magnitude() * 2;
 }

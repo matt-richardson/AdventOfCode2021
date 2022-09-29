@@ -63,4 +63,5 @@ public class RegularNumber : Number
     }
 
     public override Number DeepClone() => new RegularNumber(Number);
+    public override int Magnitude() => Number;
 }
