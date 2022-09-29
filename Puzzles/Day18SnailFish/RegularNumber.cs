@@ -35,7 +35,6 @@ public class RegularNumber : Number
 
     public void Add(RegularNumber regularNumber)
     {
-        //todo: make this an operator overload
         Number = Number + regularNumber.Number;
     }
 
