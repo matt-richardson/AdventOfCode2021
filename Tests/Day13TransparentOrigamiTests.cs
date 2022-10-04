@@ -89,7 +89,7 @@ public class Day13TransparentOrigamiTests
         [Test]
         public void CanCalculateNumberOfDots()
         {
-            instructions.Paper.VisibleDotCount().Should().Be(18);
+            instructions.Paper.VisibleDotCount.Should().Be(18);
         }
         
         [Test]
@@ -106,7 +106,7 @@ public class Day13TransparentOrigamiTests
                 "...........",
                 "...........",
             });
-            result.VisibleDotCount().Should().Be(17);
+            result.VisibleDotCount.Should().Be(17);
         }
         
         [Test]
@@ -125,7 +125,7 @@ public class Day13TransparentOrigamiTests
                 ".....",
                 ".....",
             });
-            result.VisibleDotCount().Should().Be(16);
+            result.VisibleDotCount.Should().Be(16);
         }
     }
 }

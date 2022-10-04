@@ -1,4 +1,3 @@
-
 namespace Puzzles.Day13TransparentOrigami;
 
 public class Day13TransparentOrigami : IPuzzle
@@ -19,13 +18,13 @@ public class Day13TransparentOrigami : IPuzzle
     {
         var instructions = new OrigamiInstructions(input);
         var newPaper = instructions.Paper.Fold(instructions.Folds.First());
-        return newPaper.VisibleDotCount();
+        return newPaper.VisibleDotCount;
     }
 
     public static string CalculatePart2(string[] input)
     {
         var instructions = new OrigamiInstructions(input);
-        var newPaper = instructions.Paper.Fold(instructions.Folds);
+        var newPaper = instructions.Paper.Fold(instructions.Folds.ToArray());
 
         var text = string.Join(Environment.NewLine, newPaper.Render());
         //Console.WriteLine(text);

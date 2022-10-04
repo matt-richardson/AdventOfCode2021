@@ -2,22 +2,28 @@ namespace Puzzles.Day13TransparentOrigami;
 
 public class OrigamiPaper
 {
-    private readonly IReadOnlyCollection<Coordinate> dotCoordinates;
+    private readonly int[,] dotCoordinates;
     private readonly int width;
     private readonly int height;
 
     public OrigamiPaper(IReadOnlyCollection<Coordinate> dotCoordinates)
     {
-        this.dotCoordinates = dotCoordinates;
         this.width = dotCoordinates.Max(x => x.X) + 1;
-        this.height = dotCoordinates.Max(x => x.Y) + 1; 
+        this.height = dotCoordinates.Max(x => x.Y) + 1;
+        this.dotCoordinates = new int[width, height];
+        foreach (var dotCoordinate in dotCoordinates)
+            this.dotCoordinates[dotCoordinate.X, dotCoordinate.Y] = 1;
+        VisibleDotCount = dotCoordinates.Count;
     }
     
     private OrigamiPaper(IReadOnlyCollection<Coordinate> dotCoordinates, int width, int height)
     {
-        this.dotCoordinates = dotCoordinates;
+        this.dotCoordinates = new int[width, height];
         this.width = width;
         this.height = height;
+        foreach (var dotCoordinate in dotCoordinates)
+            this.dotCoordinates[dotCoordinate.X, dotCoordinate.Y] = 1;
+        VisibleDotCount = dotCoordinates.Count;
     }
 
     public string[] Render()
@@ -25,7 +31,7 @@ public class OrigamiPaper
         var xAxis =  Enumerable.Range(0, width);
         var yAxis =  Enumerable.Range(0, height);
         return xAxis
-            .SelectMany(x => yAxis, (x, y) => new {X = x, Y = y})
+            .SelectMany(_ => yAxis, (x, y) => new {X = x, Y = y})
             .Select(coord => new CoordWithChar(
                 coord.X,
                 coord.Y,
@@ -38,7 +44,6 @@ public class OrigamiPaper
 
     public OrigamiPaper Fold(Fold fold)
     {
-        //this duplication sucks - figure out how to make it less sucky 
         switch (fold)
         {
             case FoldUp foldUp:
@@ -47,7 +52,7 @@ public class OrigamiPaper
                 var bottomHalf = Enumerable.Range(1, foldUp.Y).Select(num => foldUp.Y + num);
                 var xAxis = Enumerable.Range(0, width);
                 var coords = xAxis
-                    .SelectMany(x => topHalf.Zip(bottomHalf).Select(zip => new { x = x, y1 = zip.First, y2 = zip.Second }))
+                    .SelectMany(x => topHalf.Zip(bottomHalf).Select(zip => new { x, y1 = zip.First, y2 = zip.Second }))
                     .Where(zip => HasDot(zip.x, zip.y1) || HasDot(zip.x, zip.y2))
                     .Select(result => new Coordinate(result.x, result.y1))
                     .Distinct()
@@ -61,7 +66,7 @@ public class OrigamiPaper
                 var rightHalf = Enumerable.Range(1, foldLeft.X).Select(num => foldLeft.X + num);
                 var yAxis = Enumerable.Range(0, height);
                 var coords = yAxis
-                    .SelectMany(y => leftHalf.Zip(rightHalf).Select(zip => new { x1 = zip.First, x2 = zip.Second, y = y}))
+                    .SelectMany(y => leftHalf.Zip(rightHalf).Select(zip => new { x1 = zip.First, x2 = zip.Second, y}))
                     .Where(zip => HasDot(zip.x1, zip.y) || HasDot(zip.x2, zip.y))
                     .Select(result => new Coordinate(result.x1, result.y))
                     .Distinct()
@@ -74,18 +79,22 @@ public class OrigamiPaper
         }
     }
     
-    public long VisibleDotCount() => dotCoordinates.Count();
+    public long VisibleDotCount { get; }
 
-    private bool HasDot(int x, int y) => dotCoordinates.Any(dotCoord => dotCoord.X == x && dotCoord.Y == y);
-
-    public OrigamiPaper Fold(IEnumerable<Fold> folds)
+    private bool HasDot(int x, int y)
     {
-        // ReSharper disable PossibleMultipleEnumeration
+        return dotCoordinates.GetUpperBound(0) >= x && 
+               dotCoordinates.GetUpperBound(1) >= y &&
+               dotCoordinates[x, y] == 1;
+    }
+
+    public OrigamiPaper Fold(Fold[] folds)
+    {
         if (!folds.Any())
             return this;
-        return Fold(folds.First()).Fold(folds.Skip(1));
-        // ReSharper restore PossibleMultipleEnumeration
+        return Fold(folds[0]).Fold(folds[1..folds.Length]);
     }
 }
 
+// ReSharper disable once NotAccessedPositionalProperty.Global
 internal record CoordWithChar(int X, int Y, char Char);
