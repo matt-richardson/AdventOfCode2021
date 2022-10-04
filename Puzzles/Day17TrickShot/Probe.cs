@@ -4,17 +4,16 @@ public class Probe
 {
     public readonly Position Position = new(0, 0);
     private readonly Velocity velocity;
-    private readonly List<Position> positions = new();
 
     public Probe(Velocity velocity)
     {
         this.velocity = velocity;
-        this.InitialVelocity = velocity;
+        this.InitialVelocity = new Velocity(velocity.X, velocity.Y);
     }
 
     public Velocity InitialVelocity { get; }
 
-    public int MaxYPosition => positions.MaxBy(position => position.Y)!.Y;
+    public int MaxYPosition { get; private set; }
 
     public void Step()
     {
@@ -22,6 +21,7 @@ public class Probe
         velocity.DecrementTowardsZero();
         velocity.DecrementY();
 
-        positions.Add(new Position(Position));
+        if (Position.Y > MaxYPosition)
+            MaxYPosition = Position.Y;
     }
 }

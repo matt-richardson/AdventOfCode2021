@@ -11,8 +11,8 @@ public class VelocityCalculator
 
     public IEnumerable<Probe> Calculate()
     {
-        for (var x = -500; x < 500; x++)
-        for (var y = -500; y < 500; y++)
+        for (var x = 0; x < 400; x++)
+        for (var y = -400; y < 400; y++)
         {
             var velocity = new Velocity(x, y);
             var probe = new Probe(velocity);
