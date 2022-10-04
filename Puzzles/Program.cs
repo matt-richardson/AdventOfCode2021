@@ -12,9 +12,12 @@ public static class Program
             .GetTypes()
             .Where(x => x.IsAssignableTo(typeof(IPuzzle)))
             .Where(x => !x.IsInterface)
-            .OrderBy(x => x.Name);
             //.Where(x => x.Name.Contains("Day15"));
-            
+            .OrderBy(x => x.Name)
+            ;
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         foreach (var puzzle in puzzles)
         {
             Console.WriteLine($"Day {puzzle.Name[3..5]}: {puzzle.Name[5..]}");
@@ -22,6 +25,9 @@ public static class Program
             Time(1, () => instance.CalculatePart1());
             Time(2, () => instance.CalculatePart2());
         }
+        
+        stopwatch.Stop();
+        Console.WriteLine("Full run took " + stopwatch.Elapsed);
     }
 
     private static void Time(int partNumber, Func<object> func)
