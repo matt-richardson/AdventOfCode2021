@@ -26,9 +26,18 @@ public class Day07Whales : IPuzzle
 
     public static long CalculatePart2(string input)
     {
-        int IncrementingFuelUsageCalculator(int candidateTarget, int position) => Enumerable
-                .Range(1, Math.Abs(candidateTarget - position))
+        var cache = new Dictionary<int, int>();
+        int IncrementingFuelUsageCalculator(int candidateTarget, int position)
+        {
+            var max = Math.Abs(candidateTarget - position);
+            if (cache.ContainsKey(max))
+                return cache[max];
+            var result = Enumerable
+                .Range(1, max)
                 .Aggregate(0, (prev, curr) => prev + curr);
+            cache.Add(max, result);
+            return result;
+        }
 
         int FuelUsageCalculator(int[] positions, int candidateTarget) => positions
                 .Aggregate(0, (prev, position) => prev + IncrementingFuelUsageCalculator(candidateTarget, position));
