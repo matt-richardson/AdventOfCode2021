@@ -2,9 +2,11 @@ namespace Puzzles.Day09LavaTubes;
 
 public static class Day09LavaTubesExtensionMethods
 {
-    public static Point? PointAtCoordinate(this IList<Point> data, int row, int col)
+    public static Point? PointAtCoordinate(this Point[,] data, int row, int col)
     {
-        return data.FirstOrDefault(point => point.RowNumber == row && point.ColNumber == col);
+        if (row < 0 || row > data.GetUpperBound(0) || col < 0 || col > data.GetUpperBound(1))
+            return null;
+        return data[row, col];
     }
     
     public static IEnumerable<T> ForEach<T>(this IEnumerable<T> data, Func<IList<T>, T, T> func)

@@ -1,27 +1,38 @@
-using Microsoft.VisualBasic;
 
 namespace Puzzles.Day09LavaTubes;
 
 public class Map
 {
-    private readonly IReadOnlyCollection<Point> points;
-    private readonly IReadOnlyCollection<Basin> basins;
+    private readonly Point[] points;
+    private readonly Basin[] basins;
 
+    // ReSharper disable NotAccessedPositionalProperty.Local
     record Cell(int Index, int? Left, int? Current, int? Right);
     record Row(int Index, int[]? Up, int[] Current, int[]? Down);
+    // ReSharper restore NotAccessedPositionalProperty.Local
     record RowWithCols(Row Row, IEnumerable<Cell> Cols);
     record PointWithCoords(Row Row, Cell Col, Point Point);
     record RowAndCol(Row Row, Cell Col);
 
     public Map(string[] input)
     {
-        points = ParseInitialPoints(input)
-            .ForEach(SetNeighbours)
+        var initialPoints = ParseInitialPoints(input);
+        var lookup = Calculate2DLookup(initialPoints);
+        points = initialPoints
+            .ForEach((_, point) => SetNeighbours(point, lookup))
             .Select(x => x.Point)
             .ToArray();
         basins = LowPoints()
             .Select(x => x.GetBasin())
             .ToArray();
+    }
+
+    private static Point[,] Calculate2DLookup(PointWithCoords[] initialPoints)
+    {
+        var grid = new Point[initialPoints.Max(x => x.Row.Index + 1), initialPoints.Max(x => x.Col.Index + 1)];
+        foreach (var point in initialPoints.Select(x => x.Point).ToList())
+            grid[point.RowNumber, point.ColNumber] = point;
+        return grid;
     }
 
     private static PointWithCoords[] ParseInitialPoints(string[] input)
@@ -35,14 +46,15 @@ public class Map
             .ToArray();
     }
 
-    private PointWithCoords SetNeighbours(IList<PointWithCoords> data, PointWithCoords currentPoint)
+    private PointWithCoords SetNeighbours(
+        PointWithCoords currentPoint,
+        Point[,] lookup)
     {
-        var allPoints = data.Select(x => x.Point).ToList();
         currentPoint.Point.WithNeighbours(
-            allPoints.PointAtCoordinate(currentPoint.Row.Index - 1, currentPoint.Col.Index),
-            allPoints.PointAtCoordinate(currentPoint.Row.Index + 1, currentPoint.Col.Index),
-            allPoints.PointAtCoordinate(currentPoint.Row.Index, currentPoint.Col.Index - 1),
-            allPoints.PointAtCoordinate(currentPoint.Row.Index, currentPoint.Col.Index + 1)
+            lookup.PointAtCoordinate(currentPoint.Row.Index - 1, currentPoint.Col.Index),
+            lookup.PointAtCoordinate(currentPoint.Row.Index + 1, currentPoint.Col.Index),
+            lookup.PointAtCoordinate(currentPoint.Row.Index, currentPoint.Col.Index - 1),
+            lookup.PointAtCoordinate(currentPoint.Row.Index, currentPoint.Col.Index + 1)
         );
         return currentPoint;
     }
