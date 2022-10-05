@@ -21,10 +21,8 @@ public class Day14ExtendedPolymerizationTests
 
     class Parsing
     {
-        private PolymerInstructions instructions;
-
-        [SetUp]
-        public void Setup()
+        private readonly PolymerInstructions instructions;
+        public Parsing()
         {
             var sampleData = new[]
             {
