@@ -6,7 +6,7 @@ namespace Tests;
 [TestFixture]
 public class Day07WhalesTests
 {
-    string crabPositions = "16,1,2,0,4,2,7,1,2,14";
+    readonly string crabPositions = "16,1,2,0,4,2,7,1,2,14";
 
     [Test]
     public void Part1()
